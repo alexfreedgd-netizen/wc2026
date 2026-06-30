@@ -1755,8 +1755,9 @@ async function loadStats(){
   const isSpectator=!!spectatorData;
   // デバッグ: 何試合ロードされているか・PKが正しいか確認
   const pkMatch=D.matches.find(m=>(m.t1===16&&m.t2===13)||(m.t1===13&&m.t2===16));
+  const dbgPts=calcTeamPoints(D);
   const dbgEl=document.getElementById('stats-debug');
-  if(dbgEl) dbgEl.textContent=`データ: ${D.matches.length}試合 / 独PY pk=${pkMatch?.pk||'なし'} / src=${isSpectator?'Firebase':'ローカル'}`;
+  if(dbgEl) dbgEl.textContent=`${D.matches.length}試合 / 独PY pk=${pkMatch?.pk||'なし'} / src=${isSpectator?'FB':'Local'} / PY=${dbgPts[13]}pt DE=${dbgPts[16]}pt`;
   const empty=document.getElementById('stats-empty');
   const sections=['stats-today-section','stats-lb-section','stats-pop-section','stats-dark-section','stats-match-section','stats-overtake-section','stats-picks-section'];
 
