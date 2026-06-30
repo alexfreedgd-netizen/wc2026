@@ -2739,7 +2739,15 @@ function genRoomId(){ const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; return Array.f
 
 function genJoinCode(databaseURL,roomId){ return btoa(JSON.stringify({u:databaseURL.replace(/\/$/,''),r:roomId})).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }
 function parseJoinCode(code){
-  try{ const b64=code.trim().replace(/-/g,'+').replace(/_/g,'/'); const d=JSON.parse(atob(b64)); if(d.u&&d.r) return {databaseURL:d.u,roomId:d.r}; }catch{}
+  const c=code.trim();
+  // シンプルなルームIDのみ（6文字英数字）→ デフォルトDBを使用
+  if(/^[A-Z0-9]{5,8}$/.test(c.toUpperCase())){
+    const saved=JSON.parse(localStorage.getItem('wc2026fb')||'{}');
+    const dbUrl=saved.databaseURL||'https://sakk-c8eb6-default-rtdb.firebaseio.com';
+    return {databaseURL:dbUrl,roomId:c.toUpperCase()};
+  }
+  // base64url形式（旧形式 or フルURL込み）
+  try{ const b64=c.replace(/-/g,'+').replace(/_/g,'/'); const d=JSON.parse(atob(b64)); if(d.u&&d.r) return {databaseURL:d.u,roomId:d.r}; }catch{}
   return null;
 }
 
