@@ -2842,6 +2842,12 @@ function init(){
   viewHistory=['v-landing'];
   // Restore myName across sessions
   if(!myName) myName=localStorage.getItem('wc2026myname')||'';
+  // URL ?join=<code> で自動参加
+  const urlJoin=new URLSearchParams(location.search).get('join');
+  if(urlJoin){
+    const el=document.getElementById('join-code-input');
+    if(el) el.value=urlJoin;
+  }
   // Auto-reconnect if saved session exists
   const saved=fbLoadSaved();
   if(saved&&saved.databaseURL&&saved.roomId){
@@ -2857,6 +2863,9 @@ function init(){
     startPresenceHeartbeat();
     if(fbIsAdmin) startAutoESPN();
     updateFbStatusBar();
+  } else if(urlJoin){
+    // 保存セッションなし + URLパラメータあり → 自動参加
+    setTimeout(joinWithCode, 300);
   }
   startNewsTicker();
 }
