@@ -2603,6 +2603,8 @@ function renderMatchBreakdown(D){
       name:p.name, gain:(p.weights[m.t1]||0)*p1+(p.weights[m.t2]||0)*p2
     })).sort((a,b)=>b.gain-a.gain);
     const maxG=pp[0]?.gain||0;
+    const isPyDe=(m.t1===16&&m.t2===13)||(m.t1===13&&m.t2===16);
+    if(isPyDe){const el2=document.getElementById('stats-debug');if(el2)el2.textContent+=` | BK:t1=${m.t1}t2=${m.t2}pk=${m.pk}p1=${p1}p2=${p2}w13=${D.players[0]?.weights[13]}w16=${D.players[0]?.weights[16]}`;}
     const pkBadge=m.pk?`<span style="font-size:9px;color:var(--gold);display:block;text-align:center;line-height:1">PK</span>`:'';
     return `<div class="match-report-card">
       <div style="display:flex;align-items:center;gap:3px;font-size:13px;font-weight:700;flex-wrap:wrap">
