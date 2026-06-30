@@ -1602,13 +1602,23 @@ async function syncFromESPN(silent=false){
       const s0=parseInt(c0.score||'0'); const s1=parseInt(c1.score||'0');
       const note=ev.notes?.[0]?.headline||ev.name||'';
       const phase=phaseFromNote(note);
-      const exists=G.matches.some(m=>(m.t1===id0&&m.t2===id1)||(m.t1===id1&&m.t2===id0));
-      if(exists) continue;
-      // PK判定: スコアが同点でもwinnerが設定されている場合
+      // PK判定: スコアが同点でwinnerが設定されている場合
       let pk=null;
       if(s0===s1){
         if(c0.winner===true) pk='team1';
         else if(c1.winner===true) pk='team2';
+      }
+      const existsIdx=G.matches.findIndex(m=>(m.t1===id0&&m.t2===id1)||(m.t1===id1&&m.t2===id0));
+      if(existsIdx>=0){
+        // 既存試合のPKが未設定で今回確定した場合のみ上書き
+        const ex=G.matches[existsIdx];
+        if(!ex.pk&&pk){
+          // 保存時のチーム順序に合わせてpk方向を調整
+          const adjustedPk=(ex.t1===id1&&ex.t2===id0)?(pk==='team1'?'team2':'team1'):pk;
+          G.matches[existsIdx]={...ex,pk:adjustedPk};
+          added++;
+        }
+        continue;
       }
       G.matches.push({id:Date.now()+Math.random(),t1:id0,t2:id1,s1:s0,s2:s1,phase,pk,at:Date.now()});
       added++;
