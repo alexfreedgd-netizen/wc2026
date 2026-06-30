@@ -2975,13 +2975,6 @@ function startNewsTicker(){
 }
 
 function init(){
-  // LINEブラウザ検知 → 外部ブラウザで開くよう促す
-  if(/Line\//i.test(navigator.userAgent)){
-    const banner=document.createElement('div');
-    banner.style.cssText='position:fixed;top:0;left:0;right:0;z-index:9999;background:#06c755;color:#fff;font-size:13px;padding:10px 14px;text-align:center;font-weight:700;line-height:1.5';
-    banner.innerHTML='⚠️ LINEブラウザでは正しく表示されません<br><span style="font-size:12px;font-weight:400">右上の「…」→「ブラウザで開く」をタップしてください</span>';
-    document.body.appendChild(banner);
-  }
   goTo('v-landing',false);
   viewHistory=['v-landing'];
   // Restore myName across sessions
