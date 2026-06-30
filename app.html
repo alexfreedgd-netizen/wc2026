@@ -758,13 +758,6 @@ select{
         <span class="vs-dash">-</span>
         <input type="number" class="score-input" id="score2" min="0" max="20" placeholder="0" oninput="_checkPkRow()">
       </div>
-      <div id="pk-row" style="display:none;margin:8px 0 4px">
-        <div class="label" style="margin-bottom:6px">⚽ PK勝者（同点の場合）</div>
-        <div style="display:flex;gap:8px">
-          <button id="pk-btn-t1" onclick="_setPK('team1')" style="flex:1;padding:8px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;font-size:13px" type="button">—</button>
-          <button id="pk-btn-t2" onclick="_setPK('team2')" style="flex:1;padding:8px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;font-size:13px" type="button">—</button>
-        </div>
-      </div>
       <button class="btn btn-primary" style="width:100%;margin-top:6px" onclick="addMatch()">✓ 記録する</button>
     </div>
     <div class="label">記録済み試合 (<span id="match-count">0</span>試合)</div>
@@ -1275,37 +1268,7 @@ function renderMatchForm(){
     TEAMS.map(t=>`<option value="${t.id}">${t.f} ${t.n}</option>`).join('');
   sel1.innerHTML=opts; sel2.innerHTML=opts;
 }
-let _pkWinner=null;
-function _checkPkRow(){
-  const s1=parseInt(document.getElementById('score1').value);
-  const s2=parseInt(document.getElementById('score2').value);
-  const row=document.getElementById('pk-row');
-  const t1=parseInt(document.getElementById('match-t1').value);
-  const t2=parseInt(document.getElementById('match-t2').value);
-  const isDraw=!isNaN(s1)&&!isNaN(s2)&&s1===s2;
-  row.style.display=isDraw?'':'none';
-  if(!isDraw) _pkWinner=null;
-  // Update button labels with team names
-  const team1=TEAMS.find(t=>t.id===t1), team2=TEAMS.find(t=>t.id===t2);
-  const b1=document.getElementById('pk-btn-t1'), b2=document.getElementById('pk-btn-t2');
-  if(b1) b1.textContent=team1?team1.f+' '+team1.n:'チーム1';
-  if(b2) b2.textContent=team2?team2.f+' '+team2.n:'チーム2';
-  _highlightPkBtn();
-}
-function _setPK(winner){
-  _pkWinner=_pkWinner===winner?null:winner; // トグル
-  _highlightPkBtn();
-}
-function _highlightPkBtn(){
-  const b1=document.getElementById('pk-btn-t1'), b2=document.getElementById('pk-btn-t2');
-  if(!b1||!b2) return;
-  b1.style.background=_pkWinner==='team1'?'var(--gold)':'transparent';
-  b1.style.color=_pkWinner==='team1'?'#000':'var(--text)';
-  b1.style.fontWeight=_pkWinner==='team1'?'700':'400';
-  b2.style.background=_pkWinner==='team2'?'var(--gold)':'transparent';
-  b2.style.color=_pkWinner==='team2'?'#000':'var(--text)';
-  b2.style.fontWeight=_pkWinner==='team2'?'700':'400';
-}
+function _checkPkRow(){}
 function addMatch(){
   const t1=parseInt(document.getElementById('match-t1').value);
   const t2=parseInt(document.getElementById('match-t2').value);
@@ -1315,14 +1278,10 @@ function addMatch(){
   if(isNaN(t1)||isNaN(t2)){ toast('チームを選択してください'); return; }
   if(t1===t2){ toast('同じチームは選択できません'); return; }
   if(isNaN(s1)||isNaN(s2)||s1<0||s2<0){ toast('スコアを入力してください'); return; }
-  if(s1===s2&&!_pkWinner){ toast('同点の場合はPK勝者を選択してください'); return; }
-  const pk=s1===s2?_pkWinner:null;
-  G.matches.push({id:Date.now(),t1,t2,s1,s2,phase,pk,at:Date.now()});
+  G.matches.push({id:Date.now(),t1,t2,s1,s2,phase,pk:null,at:Date.now()});
   saveState();
   document.getElementById('score1').value='';
   document.getElementById('score2').value='';
-  _pkWinner=null;
-  document.getElementById('pk-row').style.display='none';
   renderMatches();
   toast(`✅ 試合を記録しました`);
 }
