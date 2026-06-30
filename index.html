@@ -2844,10 +2844,18 @@ async function _doPoll(){
   try{
     const data=await fbRead();
     if(!data) return;
+    const fbMatches=(data.matches||[]).filter(Boolean);
     if(fbIsAdmin){
       _mergeFirebasePlayers(data.players||[]);
+      // Firebaseのmatches（正）でG.matchesを更新
+      if(fbMatches.length>=G.matches.length){
+        G.matches=fbMatches;
+        localStorage.setItem('wc2026game',JSON.stringify(G));
+        const lbEl=document.getElementById('admin-lb');
+        if(lbEl&&!lbEl.classList.contains('hidden')) renderLeaderboard();
+      }
     } else {
-      spectatorData={players:data.players||[],matches:data.matches||[]};
+      spectatorData={players:data.players||[],matches:fbMatches};
       const statsEl=document.getElementById('v-stats');
       if(!statsEl.classList.contains('hidden')) loadStats();
     }
