@@ -1750,24 +1750,7 @@ let spectatorData=null;
 //  STATS VIEW
 // ══════════════════════════════════════════════════════
 async function loadStats(){
-  // 管理者もFirebaseから最新プレイヤーデータを取得して使う
-  let D;
-  if(spectatorData){
-    D=spectatorData;
-  } else if(fbConnected&&fbDb){
-    try{
-      const fbData=await fbRead();
-      if(fbData){
-        const fbMatches=(fbData.matches||[]).filter(Boolean);
-        const fbPlayers=fbData.players||[];
-        if(fbMatches.length) G.matches=fbMatches;
-        D={players:fbPlayers.length?fbPlayers:G.players, matches:G.matches};
-        localStorage.setItem('wc2026game',JSON.stringify(G));
-      } else { D=G; }
-    } catch(e){ D=G; }
-  } else {
-    D=G;
-  }
+  const D=spectatorData||G;
   const isSpectator=!!spectatorData;
   const empty=document.getElementById('stats-empty');
   const sections=['stats-today-section','stats-lb-section','stats-pop-section','stats-dark-section','stats-match-section','stats-overtake-section','stats-picks-section'];
@@ -2864,6 +2847,8 @@ async function _doPoll(){
     const fbMatches=(data.matches||[]).filter(Boolean);
     if(fbIsAdmin){
       _mergeFirebasePlayers(data.players||[]);
+      // G.playersをFirebaseに書き戻してモバイルと同期
+      if(G.players.length) fbWritePath('/players',G.players).catch(()=>{});
       // Firebaseのmatches（正）でG.matchesを更新
       if(fbMatches.length>=G.matches.length){
         G.matches=fbMatches;
