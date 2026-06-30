@@ -1,0 +1,3074 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>⚽ 2026 WC 予想ゲーム</title>
+<style>
+:root{
+  --gold:#FFD700;--gold2:#FFA500;--bg:#080C14;--bg2:#0d1520;
+  --surface:rgba(13,21,32,0.95);--border:rgba(255,255,255,0.08);
+  --text:#F0F4FF;--muted:#6B7A99;--accent:#00C6FF;
+  --font:'Hiragino Kaku Gothic Pro','Meiryo','Segoe UI',sans-serif;
+  --r:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{height:100%;font-size:15px}
+body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100%;overflow-x:hidden}
+
+/* ── UTILS ── */
+.hidden{display:none!important}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  border:none;border-radius:8px;cursor:pointer;font-family:var(--font);
+  font-weight:700;transition:all .15s;outline:none;
+}
+.btn-primary{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;padding:12px 28px;font-size:15px}
+.btn-primary:hover{filter:brightness(1.1);transform:scale(1.02)}
+.btn-primary:active{transform:scale(.97)}
+.btn-ghost{background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--text);padding:10px 20px;font-size:13px}
+.btn-ghost:hover{background:rgba(255,255,255,.1)}
+.btn-danger{background:rgba(220,50,50,.15);border:1px solid rgba(220,50,50,.3);color:#ff6b6b;padding:8px 16px;font-size:12px}
+.btn-sm{padding:7px 16px;font-size:12px}
+
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:16px}
+.label{font-size:11px;letter-spacing:1.5px;color:var(--muted);font-weight:700;text-transform:uppercase;margin-bottom:6px}
+.tag{display:inline-block;background:rgba(255,215,0,.12);border:1px solid rgba(255,215,0,.25);color:var(--gold);border-radius:20px;padding:2px 10px;font-size:11px;font-weight:700;letter-spacing:.5px}
+input[type=text],input[type=number]{
+  background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;
+  color:var(--text);font-family:var(--font);font-size:15px;padding:10px 14px;width:100%;
+  outline:none;transition:border .15s;
+}
+input[type=text]:focus,input[type=number]:focus{border-color:rgba(255,215,0,.5)}
+select{
+  background:#0d1520;border:1px solid var(--border);border-radius:8px;color:var(--text);
+  font-family:var(--font);font-size:14px;padding:10px 14px;width:100%;outline:none;
+}
+
+/* ── HEADER ── */
+#app-header{
+  position:sticky;top:0;z-index:100;
+  background:rgba(8,12,20,.95);backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,215,0,.15);
+  display:flex;align-items:center;gap:10px;padding:10px 16px;
+}
+#app-header h1{font-size:15px;color:var(--gold);font-weight:700;flex:1}
+#back-btn{font-size:20px;background:none;border:none;color:var(--muted);cursor:pointer;padding:4px 8px 4px 0;line-height:1}
+
+/* ── VIEWS ── */
+.view{padding:16px;max-width:600px;margin:0 auto;padding-bottom:80px}
+
+/* ── LANDING ── */
+#v-landing .hero{text-align:center;padding:32px 0 24px}
+#v-landing .hero-icon{font-size:56px;display:block;margin-bottom:12px}
+#v-landing .hero-title{font-size:22px;font-weight:700;color:#fff;margin-bottom:6px}
+#v-landing .hero-sub{font-size:13px;color:var(--muted);line-height:1.6}
+.mode-card{
+  display:flex;align-items:center;gap:14px;padding:18px 16px;
+  background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);
+  cursor:pointer;transition:all .15s;margin-bottom:10px;text-align:left;
+}
+.mode-card:hover,.mode-card:active{border-color:rgba(255,215,0,.4);background:rgba(13,21,32,.9)}
+.mode-icon{font-size:32px;flex-shrink:0}
+.mode-title{font-size:15px;font-weight:700;color:#fff;margin-bottom:3px}
+.mode-desc{font-size:12px;color:var(--muted);line-height:1.5}
+
+/* ── NAME INPUT ── */
+#v-name{padding-top:32px}
+#v-name .icon-big{font-size:48px;text-align:center;display:block;margin-bottom:16px}
+#v-name h2{text-align:center;font-size:20px;margin-bottom:8px}
+#v-name p{text-align:center;font-size:13px;color:var(--muted);margin-bottom:28px;line-height:1.6}
+
+/* ── WEIGHT ASSIGN ── */
+#v-weights .sticky-top{
+  position:sticky;top:52px;z-index:50;
+  background:rgba(8,12,20,.97);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);padding:10px 0 0;
+}
+.progress-bar-wrap{padding:0 16px 10px;display:flex;align-items:center;gap:10px}
+.progress-bar{flex:1;height:4px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--gold2),var(--gold));border-radius:2px;transition:width .3s}
+.progress-text{font-size:12px;color:var(--muted);white-space:nowrap;font-weight:600}
+
+.sel-indicator{
+  padding:6px 16px 8px;font-size:12px;color:var(--muted);
+  display:flex;align-items:center;gap:8px;
+}
+.sel-num{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:34px;height:34px;border-radius:50%;font-weight:700;font-size:15px;
+}
+
+.num-strip-wrap{overflow-x:auto;padding:8px 16px;display:flex;gap:6px;scrollbar-width:none}
+.num-strip-wrap::-webkit-scrollbar{display:none}
+.num-btn{
+  flex-shrink:0;width:38px;height:38px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;cursor:pointer;border:2px solid transparent;
+  transition:all .12s;position:relative;
+}
+.num-btn.available{border-color:transparent;opacity:.85}
+.num-btn.available:active{transform:scale(.92)}
+.num-btn.selected{transform:scale(1.15);box-shadow:0 0 0 3px rgba(255,215,0,.5)}
+.num-btn.assigned{opacity:.5;font-size:16px;cursor:default}
+.num-btn.assigned::after{content:'';position:absolute;inset:0;border-radius:50%;background:rgba(0,0,0,.4)}
+
+.group-section{margin-bottom:0}
+.group-header{
+  padding:8px 16px;font-size:11px;font-weight:700;letter-spacing:2px;
+  color:var(--muted);background:rgba(255,255,255,.02);border-top:1px solid var(--border);
+}
+.team-row{
+  display:flex;align-items:center;gap:10px;padding:10px 16px;
+  border-bottom:1px solid rgba(255,255,255,.04);cursor:pointer;transition:background .1s;
+}
+.team-row:hover{background:rgba(255,255,255,.03)}
+.team-row.has-weight{cursor:pointer}
+.team-flag{font-size:22px;width:30px;text-align:center;flex-shrink:0}
+.team-name{flex:1;font-size:14px}
+.team-group-tag{font-size:10px;color:var(--muted);margin-top:1px}
+.weight-slot{
+  width:42px;height:42px;border-radius:50%;border:2px dashed rgba(255,255,255,.18);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:700;flex-shrink:0;transition:all .15s;
+}
+.weight-slot.filled{border-style:solid;border-color:transparent}
+.weight-slot.target-ready{border-color:var(--gold);border-style:solid;animation:pulse .7s ease infinite alternate}
+@keyframes pulse{from{box-shadow:0 0 0 0 rgba(255,215,0,.4)}to{box-shadow:0 0 0 8px rgba(255,215,0,0)}}
+@keyframes livepulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+.assign-actions{position:fixed;bottom:0;left:0;right:0;background:rgba(8,12,20,.97);
+  backdrop-filter:blur(12px);border-top:1px solid var(--border);
+  padding:12px 16px;display:flex;gap:10px;z-index:100;max-width:600px;margin:auto}
+
+/* ── DONE ── */
+#v-done .done-hero{text-align:center;padding:28px 0 20px}
+#v-done .done-icon{font-size:52px;display:block;margin-bottom:10px}
+#v-done h2{font-size:22px;font-weight:700;margin-bottom:6px}
+#v-done p{font-size:13px;color:var(--muted)}
+.code-box{
+  background:rgba(0,198,255,.06);border:1px solid rgba(0,198,255,.2);
+  border-radius:10px;padding:14px 16px;font-family:monospace;font-size:11px;
+  word-break:break-all;color:#a0d8ef;line-height:1.5;
+  max-height:100px;overflow-y:auto;margin:12px 0;
+}
+.top-picks{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.pick-chip{
+  display:flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,.06);border:1px solid var(--border);
+  border-radius:8px;padding:6px 10px;font-size:12px;
+}
+.pick-chip .pw{font-weight:700;font-size:14px}
+
+/* ── ADMIN ── */
+.admin-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin:0 -16px 0}
+.admin-tab{
+  flex:1;padding:12px 8px;text-align:center;font-size:13px;font-weight:600;
+  color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;
+}
+.admin-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+
+/* Players tab */
+.player-entry{
+  display:flex;align-items:center;gap:10px;padding:12px 14px;
+  background:var(--bg2);border:1px solid var(--border);border-radius:10px;margin-bottom:8px;
+}
+.player-avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;flex-shrink:0}
+.player-name-txt{font-size:14px;font-weight:600}
+.player-count{font-size:11px;color:var(--muted);margin-top:1px}
+.paste-area{width:100%;font-size:12px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px;font-family:monospace;resize:none}
+
+/* Matches tab */
+.match-form{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:14px}
+.team-select-row{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;margin-bottom:10px}
+.vs-label{text-align:center;font-size:13px;font-weight:700;color:var(--muted)}
+.score-row{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;margin-bottom:10px}
+.score-input{text-align:center;font-size:20px;font-weight:700;padding:8px;width:100%}
+.vs-dash{text-align:center;font-size:18px;color:var(--muted)}
+.phase-select{margin-bottom:10px}
+
+.match-item{
+  display:flex;align-items:center;gap:8px;padding:10px 12px;
+  background:var(--bg2);border:1px solid var(--border);border-radius:8px;margin-bottom:6px;font-size:13px;
+}
+.match-score{font-weight:700;font-size:15px;padding:0 8px}
+.match-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:2px 6px;margin-left:auto}
+
+/* Leaderboard */
+.lb-card{
+  background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);
+  margin-bottom:10px;overflow:hidden;transition:all .2s;
+}
+.lb-card.rank-1{border-color:rgba(255,215,0,.4);background:rgba(255,215,0,.04)}
+.lb-card.rank-2{border-color:rgba(192,192,192,.3)}
+.lb-card.rank-3{border-color:rgba(205,127,50,.3)}
+.lb-top{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer}
+.lb-rank{font-size:22px;font-weight:700;width:34px;text-align:center}
+.lb-info{flex:1}
+.lb-player{font-size:15px;font-weight:700}
+.lb-score{font-size:13px;color:var(--muted);margin-top:2px}
+.lb-pts{font-size:20px;font-weight:700;color:var(--gold);text-align:right}
+.lb-chevron{color:var(--muted);transition:transform .2s;font-size:14px}
+.lb-detail{display:none;padding:0 16px 14px;border-top:1px solid var(--border);margin-top:2px}
+.lb-detail.open{display:block}
+.detail-row{display:grid;grid-template-columns:28px 1fr 36px 36px 80px;align-items:center;gap:6px;padding:4px 0;font-size:12px;border-bottom:1px solid rgba(255,255,255,.04)}
+.detail-row:last-child{border:none}
+.detail-pts{color:var(--accent)}
+.detail-total{color:var(--gold);font-weight:700;text-align:right}
+
+/* Toast */
+#toast{
+  position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:#222;border:1px solid rgba(255,215,0,.3);border-radius:8px;
+  padding:10px 20px;font-size:13px;color:#fff;opacity:0;transition:all .25s;
+  pointer-events:none;z-index:999;white-space:nowrap;
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* Rules card */
+.rules-card{background:rgba(0,198,255,.04);border:1px solid rgba(0,198,255,.15);border-radius:var(--r);padding:14px;font-size:12px;color:#a0d0ef;line-height:1.8}
+.rules-card h4{color:var(--accent);font-size:13px;margin-bottom:8px}
+.rules-card .formula{background:rgba(0,0,0,.3);border-radius:6px;padding:8px 12px;font-family:monospace;font-size:11px;color:#fff;margin:8px 0}
+
+/* Sync banner */
+.sync-banner{display:flex;align-items:center;justify-content:space-between;background:rgba(0,198,255,.06);border:1px solid rgba(0,198,255,.2);border-radius:var(--r);padding:12px 16px;margin-bottom:16px}
+.sync-status-ok{color:#4ade80}
+.sync-status-err{color:#f87171}
+
+/* Stats view */
+.stats-section{margin-bottom:22px}
+.stats-section-title{font-size:14px;font-weight:700;color:var(--gold);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.pop-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.pop-row:last-child{border:none}
+.pop-rank{font-size:12px;color:var(--muted);width:22px;text-align:right;flex-shrink:0}
+.pop-flag{font-size:18px;width:26px;text-align:center;flex-shrink:0}
+.pop-name{font-size:13px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pop-bar-wrap{width:90px;height:6px;background:rgba(255,255,255,.08);border-radius:3px;flex-shrink:0;overflow:hidden}
+.pop-bar{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent),var(--gold));transition:width .5s}
+.pop-val{font-size:11px;color:var(--muted);width:32px;text-align:right;flex-shrink:0}
+/* ── Win rate ── */
+.wr-row{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:8px}
+.wr-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}
+.wr-name{font-size:14px;font-weight:700;display:flex;align-items:center;gap:6px}
+.wr-rate{font-size:22px;font-weight:800;color:var(--gold);letter-spacing:-0.5px}
+.wr-bar-wrap{height:8px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;display:flex;margin-bottom:6px}
+.wr-bar-earned{height:100%;background:linear-gradient(90deg,#f59e0b,var(--gold));transition:width .6s}
+.wr-bar-group{height:100%;background:rgba(255,165,0,.28);transition:width .6s}
+.wr-bar-ko{height:100%;background:rgba(255,215,0,.11);transition:width .6s}
+.wr-footer{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);gap:6px;flex-wrap:wrap}
+.wr-legend{display:flex;align-items:center;gap:3px}
+.wr-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+
+.dark-card{background:var(--bg2);border:1px solid rgba(255,165,0,.25);border-radius:10px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.dark-badge{font-size:10px;background:rgba(255,165,0,.15);color:var(--gold2);border-radius:4px;padding:2px 6px;white-space:nowrap}
+.dark-stats{font-size:11px;color:var(--muted);margin-top:2px}
+
+.next-match-card{background:linear-gradient(135deg,rgba(0,198,255,.06),rgba(255,215,0,.04));border:1px solid rgba(0,198,255,.2);border-radius:var(--r);padding:16px;text-align:center}
+.next-teams{font-size:20px;font-weight:700;margin:6px 0}
+.next-meta{font-size:12px;color:var(--muted)}
+.stake-row{display:flex;justify-content:space-between;font-size:11px;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+
+.mini-lb-row{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;margin-bottom:6px}
+.mini-lb-rank{font-size:13px;font-weight:700;width:24px;text-align:center}
+.mini-lb-name{flex:1;font-size:13px;font-weight:600}
+.mini-lb-pts{font-size:15px;font-weight:700;color:var(--gold)}
+.mini-lb-delta{font-size:11px;padding:1px 6px;border-radius:4px;flex-shrink:0}
+.delta-up{background:rgba(74,222,128,.1);color:#4ade80}
+.delta-new{background:rgba(0,198,255,.1);color:var(--accent)}
+
+/* Player detail modal */
+.player-detail-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.player-detail-row:last-child{border:none}
+.player-detail-w{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0}
+.player-detail-pts{font-size:12px;color:var(--muted);width:52px;text-align:right;flex-shrink:0}
+.player-detail-score{font-size:13px;font-weight:700;color:var(--gold);width:52px;text-align:right;flex-shrink:0}
+
+/* Firebase modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;display:flex;align-items:flex-end;justify-content:center;padding:0}
+.modal-box{background:var(--bg2);border:1px solid var(--border);border-radius:20px 20px 0 0;padding:24px 20px 40px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto}
+.modal-title{font-size:18px;font-weight:700;margin-bottom:4px}
+.modal-sub{font-size:12px;color:var(--muted);margin-bottom:20px;line-height:1.6}
+.modal-step{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:12px}
+.modal-step-num{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--gold);color:#000;font-size:11px;font-weight:700;margin-right:6px;flex-shrink:0}
+.modal-step-title{font-size:13px;font-weight:700;display:flex;align-items:center;margin-bottom:6px}
+.modal-step-body{font-size:12px;color:var(--muted);line-height:1.7;margin-left:28px}
+.modal-step-body a{color:var(--accent)}
+.modal-textarea{width:100%;font-size:11px;background:rgba(0,0,0,.4);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px;font-family:monospace;resize:none;margin-top:8px;margin-left:28px;width:calc(100% - 28px)}
+.room-input{font-size:22px;font-weight:700;letter-spacing:6px;text-align:center;padding:12px;background:rgba(0,0,0,.4);border:1px solid var(--border);border-radius:8px;color:var(--text);width:100%;margin:8px 0;text-transform:uppercase}
+.room-display{font-size:36px;font-weight:700;letter-spacing:8px;text-align:center;color:var(--gold);padding:16px;background:rgba(255,215,0,.06);border:1px solid rgba(255,215,0,.2);border-radius:var(--r);margin:12px 0}
+.fb-status-bar{display:flex;flex-direction:column;gap:0;padding:8px 14px;background:rgba(0,198,255,.06);border-bottom:1px solid rgba(0,198,255,.12);font-size:12px}
+.fb-status-bar-top{display:flex;align-items:center;gap:8px;width:100%}
+#fb-online-row{display:none;flex-wrap:wrap;gap:4px;margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,.06)}
+.fb-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.fb-dot-on{background:#4ade80;box-shadow:0 0 6px #4ade80}
+.fb-dot-off{background:#6B7A99}
+
+/* Spectator / watch */
+.watch-card{background:rgba(255,215,0,.04);border:1px solid rgba(255,215,0,.18);border-radius:var(--r);padding:14px;margin-top:16px}
+.watch-card-title{font-size:13px;font-weight:700;color:var(--gold);margin-bottom:8px}
+.watch-input{width:100%;font-size:11px;background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px;font-family:monospace;resize:none;margin-bottom:8px}
+.export-card{background:rgba(0,198,255,.05);border:1px solid rgba(0,198,255,.2);border-radius:var(--r);padding:14px;margin-bottom:14px}
+.export-code-box{width:100%;font-size:10px;background:rgba(0,0,0,.4);border:1px solid var(--border);border-radius:6px;color:#4ade80;padding:8px;font-family:monospace;word-break:break-all;max-height:80px;overflow-y:auto;margin:8px 0;cursor:pointer;user-select:all}
+/* Weight table */
+#stats-table th{background:rgba(255,255,255,.04);padding:6px 8px;text-align:center;font-size:11px;color:var(--muted);font-weight:700;white-space:nowrap;position:sticky;top:0;z-index:1}
+#stats-table th.team-col{text-align:left;min-width:110px;position:sticky;left:0;background:var(--bg2);z-index:2}
+#stats-table td{padding:5px 6px;text-align:center;border-bottom:1px solid rgba(255,255,255,.03)}
+#stats-table td.team-col{text-align:left;white-space:nowrap;position:sticky;left:0;background:var(--bg2);z-index:1;padding-left:8px}
+#stats-table tr:hover td{background:rgba(255,255,255,.03)}
+#stats-table tr:hover td.team-col{background:rgba(20,30,48,1)}
+.wt-chip{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:6px;font-size:12px;font-weight:700}
+
+.spectator-badge{display:inline-block;background:rgba(255,215,0,.15);color:var(--gold);border:1px solid rgba(255,215,0,.3);border-radius:6px;font-size:11px;font-weight:700;padding:2px 8px;margin-left:8px;vertical-align:middle}
+
+/* ── MATCH BREAKDOWN ── */
+.match-report-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:11px 13px;margin-bottom:8px}
+.match-report-score{font-size:15px;font-weight:700;color:var(--gold);padding:0 5px}
+.match-pts-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.match-pt-pill{background:rgba(255,255,255,.06);border-radius:20px;padding:3px 10px;font-size:12px;white-space:nowrap}
+.match-pt-pill.winner{background:rgba(255,215,0,.15);border:1px solid rgba(255,215,0,.3);color:var(--gold)}
+
+/* ── OVERTAKE SIMULATOR ── */
+.overtake-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px}
+.overtake-gap-num{font-size:20px;font-weight:700;color:#ff7043}
+.overtake-key{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.key-chip{background:rgba(0,198,255,.08);border:1px solid rgba(0,198,255,.2);border-radius:6px;padding:3px 9px;font-size:11px}
+
+/* ── NEXT MATCH SPOTLIGHT ── */
+.spotlight-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.spotlight-box{background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.2);border-radius:8px;padding:8px 10px;text-align:center}
+.spotlight-label{font-size:10px;color:var(--muted);margin-bottom:4px}
+.spotlight-val{font-size:18px;font-weight:700;color:#4ade80}
+.spotlight-name{font-size:11px;color:var(--muted);margin-top:2px}
+
+/* ── MATCH END CARD ── */
+#match-end-card{position:fixed;left:12px;right:12px;bottom:88px;z-index:991;background:linear-gradient(160deg,rgba(5,18,7,.97),rgba(3,12,5,.99));border:1px solid rgba(74,222,128,.28);border-radius:20px;padding:16px 16px 12px;box-shadow:0 -1px 0 rgba(74,222,128,.14),0 20px 56px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.04);transform:translateY(calc(100% + 110px));opacity:0;transition:transform .48s cubic-bezier(.34,1.15,.64,1),opacity .28s ease;pointer-events:none;overflow:hidden;cursor:pointer}
+#match-end-card.show{transform:translateY(0);opacity:1;pointer-events:all}
+#me-score-row{display:flex;align-items:center;justify-content:center;gap:8px;margin:8px 0 14px;flex-wrap:wrap}
+.me-team{font-size:15px;font-weight:800}
+.me-score-box{font-size:26px;font-weight:900;letter-spacing:1px;color:#fff;background:rgba(255,255,255,.07);border-radius:10px;padding:5px 14px;border:1px solid rgba(255,255,255,.09)}
+.me-gain-row{display:flex;align-items:center;gap:7px;font-size:12px;margin-bottom:5px}
+.me-gain-bar-wrap{flex:1;height:3px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden}
+.me-gain-bar{height:100%;border-radius:2px;background:linear-gradient(90deg,#4ade80,#22d3ee)}
+.me-gain-pt{font-weight:700;color:#4ade80;width:48px;text-align:right;flex-shrink:0;font-size:12px}
+#me-progress{position:absolute;bottom:0;left:0;height:3px;background:rgba(74,222,128,.55);border-radius:0 0 0 20px}
+/* ── ONLINE PRESENCE ── */
+.online-bar{display:flex;flex-wrap:wrap;gap:5px;margin:8px 0 10px}
+.online-pill{display:inline-flex;align-items:center;gap:4px;background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.18);border-radius:20px;padding:3px 10px;font-size:11px;color:#4ade80}
+.online-pill-dot{width:6px;height:6px;border-radius:50%;background:#4ade80;box-shadow:0 0 7px #4ade80;animation:_onlinePulse 2.2s ease-in-out infinite;flex-shrink:0}
+.offline-pill{display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:3px 10px;font-size:11px;color:rgba(255,255,255,.3)}
+.offline-pill-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.2);flex-shrink:0}
+@keyframes _onlinePulse{0%,100%{box-shadow:0 0 5px #4ade80}50%{box-shadow:0 0 12px #4ade80,0 0 20px rgba(74,222,128,.3)}}
+
+/* ── CHAT FAB ── */
+#chat-fab{position:fixed;bottom:24px;right:18px;z-index:990;width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#0070f3,#00c6ff);border:none;box-shadow:0 4px 18px rgba(0,112,243,.45);display:none;align-items:center;justify-content:center;font-size:24px;cursor:pointer;transition:transform .18s,box-shadow .18s}
+#chat-fab:active{transform:scale(.93)}
+#chat-fab.visible{display:flex}
+#chat-fab-badge{position:absolute;top:9px;right:9px;min-width:16px;height:16px;background:#ff4444;border-radius:8px;border:2px solid #0d0d1a;font-size:9px;font-weight:700;color:#fff;display:none;align-items:center;justify-content:center;padding:0 3px}
+
+/* ── CHAT MODAL ── */
+#chat-modal{position:fixed;inset:0;z-index:8888;display:flex;flex-direction:column;pointer-events:none;opacity:0;transition:opacity .22s}
+#chat-modal.open{pointer-events:all;opacity:1}
+#chat-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(3px)}
+#chat-panel{position:absolute;bottom:0;left:0;right:0;height:72vh;max-height:580px;background:#0e0e1c;border-top:1px solid rgba(255,255,255,.1);border-radius:22px 22px 0 0;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);overflow:hidden}
+#chat-modal.open #chat-panel{transform:translateY(0)}
+#chat-header{padding:14px 16px 12px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+#chat-header-info{font-size:14px;font-weight:700}
+#chat-header-sub{font-size:11px;color:var(--muted);margin-top:1px}
+#chat-close-btn{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.08);border:none;color:var(--muted);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+#chat-messages{flex:1;overflow-y:auto;padding:14px 14px 8px;display:flex;flex-direction:column;gap:12px}
+#chat-messages::-webkit-scrollbar{width:3px}
+#chat-messages::-webkit-scrollbar-track{background:transparent}
+#chat-messages::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:2px}
+.chat-empty{text-align:center;color:var(--muted);font-size:13px;padding:30px 0}
+.chat-msg{display:flex;flex-direction:column;gap:3px;max-width:78%}
+.chat-msg.mine{align-self:flex-end;align-items:flex-end}
+.chat-msg.other{align-self:flex-start;align-items:flex-start}
+.chat-msg-meta{font-size:10px;color:var(--muted);display:flex;gap:6px;align-items:center}
+.chat-msg-bubble{padding:9px 13px;font-size:14px;line-height:1.45;word-break:break-word}
+.chat-msg.mine .chat-msg-bubble{background:linear-gradient(135deg,#0070f3,#0098ff);color:#fff;border-radius:18px 18px 4px 18px}
+.chat-msg.other .chat-msg-bubble{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.09);color:var(--text);border-radius:18px 18px 18px 4px}
+.chat-date-sep{text-align:center;font-size:10px;color:rgba(255,255,255,.2);position:relative;margin:4px 0}
+#chat-input-row{padding:10px 12px 12px;border-top:1px solid rgba(255,255,255,.07);display:flex;gap:8px;flex-shrink:0;align-items:center}
+#chat-name-warn{padding:10px 14px;background:rgba(255,165,0,.08);border-top:1px solid rgba(255,165,0,.15);font-size:12px;color:rgba(255,165,0,.9);text-align:center;flex-shrink:0}
+#chat-input{flex:1;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:22px;color:var(--text);padding:10px 16px;font-size:14px;outline:none;min-width:0}
+#chat-input:focus{border-color:rgba(0,198,255,.5);background:rgba(255,255,255,.09)}
+#chat-send-btn{background:var(--accent);color:#000;border:none;border-radius:22px;padding:10px 18px;font-weight:700;font-size:14px;cursor:pointer;white-space:nowrap;flex-shrink:0}
+#chat-send-btn:disabled{opacity:.4;cursor:default}
+
+/* ── GOAL CELEBRATION ── */
+#goal-overlay{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0}
+#goal-overlay.active{pointer-events:all;opacity:1}
+#goal-bg{position:absolute;inset:0;background:rgba(4,4,12,.88);backdrop-filter:blur(6px)}
+#goal-canvas{position:absolute;inset:0;pointer-events:none}
+#goal-card{position:relative;z-index:3;text-align:center;padding:36px 52px;background:linear-gradient(160deg,rgba(18,18,28,.92),rgba(8,8,18,.96));border-radius:28px;border:1px solid rgba(255,215,0,.25);box-shadow:0 0 0 1px rgba(255,215,0,.08),0 0 80px rgba(255,165,0,.12),0 32px 80px rgba(0,0,0,.6);max-width:340px;width:90vw}
+#goal-emoji-wrap{margin-bottom:4px;line-height:1}
+#goal-emoji{font-size:70px;display:inline-block}
+#goal-text{font-size:76px;font-weight:900;letter-spacing:5px;line-height:1;background:linear-gradient(135deg,#FFE066 0%,#FFB300 40%,#FF8C00 70%,#FFD700 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:14px}
+#goal-team{font-size:19px;font-weight:700;color:#fff;letter-spacing:.5px;margin-bottom:10px}
+#goal-divider{width:48px;height:2px;background:linear-gradient(90deg,transparent,rgba(255,215,0,.5),transparent);margin:0 auto 10px}
+#goal-benefit{font-size:13px;color:rgba(255,255,255,.6);line-height:1.6}
+#goal-dismiss{margin-top:22px;font-size:11px;color:rgba(255,255,255,.25);letter-spacing:.5px;cursor:pointer}
+.goal-ripple-el{position:absolute;left:50%;top:50%;border-radius:50%;pointer-events:none;transform:translate(-50%,-50%) scale(0);opacity:0}
+@keyframes _goalOverlayIn{from{opacity:0}to{opacity:1}}
+@keyframes _goalOverlayOut{from{opacity:1}to{opacity:0}}
+@keyframes _goalCardIn{0%{transform:scale(.55) translateY(24px);opacity:0;filter:blur(14px)}55%{transform:scale(1.06) translateY(-3px);opacity:1;filter:blur(0)}75%{transform:scale(.975)}100%{transform:scale(1) translateY(0);opacity:1;filter:blur(0)}}
+@keyframes _goalEmojiIn{0%{transform:scale(0) rotate(-15deg);opacity:0}55%{transform:scale(1.25) rotate(6deg);opacity:1}75%{transform:scale(.94) rotate(-2deg)}100%{transform:scale(1) rotate(0);opacity:1}}
+@keyframes _goalTextIn{0%{transform:scale(.35) skewX(6deg);opacity:0;filter:blur(10px)}50%{transform:scale(1.1) skewX(-1deg);opacity:1;filter:blur(0)}70%{transform:scale(.97) skewX(0)}100%{transform:scale(1);opacity:1;filter:blur(0)}}
+@keyframes _goalFadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes _goalRipple{0%{transform:translate(-50%,-50%) scale(0);opacity:.75}100%{transform:translate(-50%,-50%) scale(1);opacity:0}}
+@keyframes _goalShimmer{0%,100%{opacity:1}50%{opacity:.65}}
+
+/* ── News ticker ── */
+#news-ticker{background:#07070d;border-bottom:1px solid rgba(255,215,0,.2);height:27px;display:flex;align-items:center;overflow:hidden;flex-shrink:0}
+.ticker-label{background:linear-gradient(135deg,#e8b800,#ffd700);color:#000;font-weight:800;font-size:10px;padding:0 11px;height:100%;display:flex;align-items:center;white-space:nowrap;flex-shrink:0;letter-spacing:.5px}
+.ticker-track{flex:1;overflow:hidden;-webkit-mask-image:linear-gradient(to right,transparent 0,#000 16px,#000 calc(100% - 16px),transparent 100%);mask-image:linear-gradient(to right,transparent 0,#000 16px,#000 calc(100% - 16px),transparent 100%)}
+#ticker-inner{display:inline-flex;align-items:center;white-space:nowrap;will-change:transform}
+#ticker-inner.running{animation:ticker-move 70s linear infinite}
+#news-ticker:hover #ticker-inner{animation-play-state:paused}
+@keyframes ticker-move{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ticker-item{display:inline-block;padding:0 32px;color:rgba(255,255,255,.78);font-size:11px;cursor:default}
+.ticker-item::before{content:'◆ ';color:var(--gold);opacity:.7}
+.ticker-sep{display:inline-block;width:1px;height:12px;background:rgba(255,215,0,.3);margin:0 4px;vertical-align:middle}
+</style>
+</head>
+<body>
+
+<!-- NEWS TICKER -->
+<div id="news-ticker">
+  <div class="ticker-label">📰 最新ニュース</div>
+  <div class="ticker-track"><div id="ticker-inner"></div></div>
+</div>
+
+<!-- HEADER -->
+<div id="app-header">
+  <button id="back-btn" onclick="goBack()" class="hidden">←</button>
+  <h1 id="header-title">⚽ 2026 WC 予想ゲーム</h1>
+  <div id="header-right"></div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- Firebase status bar (shown when connected) -->
+<div id="fb-status-bar" class="fb-status-bar hidden">
+  <div class="fb-status-bar-top">
+    <div class="fb-dot fb-dot-on" id="fb-dot"></div>
+    <span id="fb-status-text">接続中…</span>
+    <span style="flex:1"></span>
+    <span style="font-weight:700;letter-spacing:2px;color:var(--gold)" id="fb-room-label"></span>
+  </div>
+  <div id="fb-online-row"></div>
+</div>
+
+<!-- Player detail modal -->
+<div id="player-detail-modal" class="modal-overlay hidden" onclick="if(event.target===this)this.classList.add('hidden')">
+  <div class="modal-box">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+      <div class="modal-title" id="pdm-name"></div>
+      <div style="font-size:13px;color:var(--gold);font-weight:700" id="pdm-total"></div>
+    </div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:14px">全48カ国の期待度 ・ 勝ち点 ・ 獲得ポイント</div>
+    <div id="pdm-list"></div>
+    <button class="btn btn-ghost" style="width:100%;margin-top:16px" onclick="document.getElementById('player-detail-modal').classList.add('hidden')">閉じる</button>
+  </div>
+</div>
+
+<!-- Firebase setup modal (admin only) -->
+<div id="fb-modal" class="modal-overlay hidden" onclick="if(event.target===this)closeFbModal()">
+  <div class="modal-box">
+    <div id="fb-modal-step-config">
+      <div class="modal-title">🔥 Firebase 管理者設定</div>
+      <div class="modal-sub">ルームを作成すると友達に「参加コード」を共有できます。</div>
+
+      <div class="modal-step">
+        <div class="modal-step-title"><span class="modal-step-num">1</span>Realtime Database を作成</div>
+        <div class="modal-step-body">
+          Firebase コンソール → サイドメニュー「<strong>Realtime Database</strong>」→「データベースを作成」→ <strong>テストモード</strong>を選択
+        </div>
+      </div>
+      <div class="modal-step">
+        <div class="modal-step-title"><span class="modal-step-num">2</span>Database URL を貼り付ける</div>
+        <div class="modal-step-body">
+          Realtime Database のページ上部に表示されているURL<br>
+          （例: https://myapp-default-rtdb.firebaseio.com）
+          <input type="url" id="fb-dburl-input" style="width:100%;margin-top:8px;padding:10px;background:rgba(0,0,0,.4);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:12px;font-family:monospace" placeholder="https://your-app-default-rtdb.firebaseio.com">
+        </div>
+      </div>
+
+      <button class="btn btn-primary" style="width:100%;margin-top:12px" onclick="fbCreateRoom()">✨ ルームを作成する</button>
+    </div>
+
+    <div id="fb-modal-step-done" style="display:none">
+      <div class="modal-title">✅ ルーム作成完了！</div>
+      <div class="modal-sub">この<strong>参加コード</strong>を友達にLINEで送ってください<br>友達はコードを貼るだけで参加できます</div>
+      <div class="export-code-box" id="fb-join-code-box" style="font-size:13px;padding:12px;cursor:pointer" onclick="copyJoinCode()"></div>
+      <button class="btn btn-primary" style="width:100%;margin-top:4px" onclick="copyJoinCode()">📋 参加コードをコピー</button>
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border)">
+        <div style="font-size:12px;color:var(--muted);margin-bottom:6px">ルームID（管理画面で確認）</div>
+        <div class="room-display" style="font-size:24px;letter-spacing:5px;padding:10px" id="fb-room-display"></div>
+      </div>
+      <button class="btn btn-ghost" style="width:100%;margin-top:10px" onclick="closeFbModal()">閉じる</button>
+    </div>
+
+    <button class="btn btn-ghost btn-sm" style="width:100%;margin-top:16px;color:var(--muted)" onclick="closeFbModal()">キャンセル</button>
+  </div>
+</div>
+
+<!-- ════ LANDING ════ -->
+<div id="v-landing" class="view">
+  <div class="hero">
+    <span class="hero-icon">🏆</span>
+    <div class="hero-title">2026 FIFA World Cup<br>勝敗予想ゲーム</div>
+    <div class="hero-sub" style="margin-top:8px">48カ国に1〜48の期待度を割り振り、<br>チームの勝ち点×期待度で競うゲームです</div>
+  </div>
+
+  <div class="rules-card" style="margin-bottom:20px">
+    <h4>📋 ゲームルール</h4>
+    全48国に <strong>1〜48</strong> の数字をひとつずつ割り当て（重複不可）<br>
+    <div class="formula">獲得ポイント = チームの勝ち点 × あなたの期待度</div>
+    予選〜決勝の全試合終了後、合計ポイントが最多の人が優勝！<br>
+    <span style="color:#ffd700">💡 初日特例：</span>初日の試合結果を見てから割り振り可能
+  </div>
+
+  <button class="mode-card" onclick="startOrPromptJoin()" style="width:100%">
+    <span class="mode-icon">✍️</span>
+    <div>
+      <div class="mode-title">予想を入力する</div>
+      <div class="mode-desc">48チームに期待度を割り振ってルームに送信しよう。</div>
+    </div>
+  </button>
+
+  <button class="mode-card" onclick="goAdminOrPrompt()" style="width:100%">
+    <span class="mode-icon">🎮</span>
+    <div>
+      <div class="mode-title">ゲームを管理する</div>
+      <div class="mode-desc">みんなの予想コードを集めて試合結果を入力。順位表をリアルタイム更新。</div>
+    </div>
+  </button>
+
+  <button class="mode-card" onclick="goTo('v-stats')" style="width:100%" id="stats-btn">
+    <span class="mode-icon">📊</span>
+    <div>
+      <div class="mode-title">みんなの予想データを見る</div>
+      <div class="mode-desc">人気ランキング・大穴チーム・現在の順位を確認。みんなで盛り上がろう！</div>
+    </div>
+  </button>
+
+  <!-- Join code entry (prominent, for friends) -->
+  <div style="background:rgba(255,215,0,.04);border:1px solid rgba(255,215,0,.2);border-radius:var(--r);padding:14px;margin-top:4px">
+    <div style="font-size:13px;font-weight:700;color:var(--gold);margin-bottom:6px">🔑 参加コードを持っている方</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:10px">管理者からもらったコードを貼り付けてください<br>予想の送信も順位の閲覧もできます</div>
+    <textarea id="join-code-input" class="watch-input" rows="2" placeholder="参加コードをここに貼り付け…" style="margin-bottom:8px"></textarea>
+    <button class="btn btn-primary" style="width:100%" onclick="joinWithCode()">参加する →</button>
+  </div>
+
+  <button class="btn btn-ghost btn-sm" style="width:100%;margin-top:10px;color:var(--muted);font-size:11px" onclick="openFbModal()">🔥 管理者の方はこちら（ルーム作成）</button>
+
+</div>
+
+<!-- ════ STATS ════ -->
+<div id="v-stats" class="view hidden" style="padding-bottom:24px">
+
+  <!-- Today's / Tomorrow's matches -->
+  <div class="stats-section" id="stats-today-section" style="display:none">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+      <div id="stats-today-title" style="font-size:13px;font-weight:700;flex:1"></div>
+      <div style="display:flex;gap:4px">
+        <button id="tab-today" onclick="switchMatchDay(0)" style="font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;border:1px solid var(--border);background:var(--gold);color:#000;cursor:pointer">今日</button>
+        <button id="tab-tomorrow" onclick="switchMatchDay(1)" style="font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer">明日</button>
+      </div>
+    </div>
+    <div id="stats-today-list"></div>
+  </div>
+
+  <!-- Current standings -->
+  <div class="stats-section" id="stats-lb-section" style="display:none">
+    <div class="stats-section-title" id="stats-lb-title">🏆 現在の順位</div>
+    <div id="stats-lb-list"></div>
+  </div>
+
+  <!-- Popularity ranking -->
+  <div class="stats-section" id="stats-pop-section" style="display:none">
+    <div class="stats-section-title">📊 暫定勝率 <span style="font-size:11px;font-weight:400;color:var(--muted)">確定済 ÷ (確定済 + 残りMAX)</span></div>
+    <div id="stats-pop-list"></div>
+  </div>
+
+  <!-- Dark horses -->
+  <div class="stats-section" id="stats-dark-section" style="display:none">
+    <div class="stats-section-title">🐴 大穴チーム <span style="font-size:11px;font-weight:400;color:var(--muted)">(低評価なのに勝ち点！)</span></div>
+    <div id="stats-dark-list"></div>
+  </div>
+
+  <!-- Match points breakdown -->
+  <div class="stats-section" id="stats-match-section" style="display:none">
+    <div class="stats-section-title">⚡ 試合別ポイント速報</div>
+    <div id="stats-match-list"></div>
+  </div>
+
+  <!-- Overtake simulator -->
+  <div class="stats-section" id="stats-overtake-section" style="display:none">
+    <div class="stats-section-title">🔄 逆転シミュレーター</div>
+    <div id="stats-overtake-list"></div>
+  </div>
+
+  <!-- Who picked what -->
+  <div class="stats-section" id="stats-picks-section" style="display:none">
+    <div class="stats-section-title">🎯 みんなの推し国トップ3</div>
+    <div id="stats-picks-list"></div>
+  </div>
+
+  <!-- All weights table -->
+  <div class="stats-section" id="stats-table-section" style="display:none">
+    <div class="stats-section-title" style="cursor:pointer" onclick="toggleWeightTable()">
+      📋 全員の配点一覧 <span id="stats-table-chevron" style="font-size:12px;color:var(--muted)">▲ 閉じる</span>
+    </div>
+    <div id="stats-table-wrap" style="display:block">
+      <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
+        <table id="stats-table" style="width:100%;border-collapse:collapse;font-size:12px"></table>
+      </div>
+    </div>
+  </div>
+
+  <div id="stats-empty" style="text-align:center;padding:40px 20px;color:var(--muted);font-size:14px">
+    参加者の予想コードを管理画面で登録すると<br>統計データが表示されます
+  </div>
+
+  <button class="btn btn-ghost" style="width:100%;margin-top:8px" onclick="loadStats()">🔄 更新</button>
+</div>
+
+<!-- ════ NAME ════ -->
+<div id="v-name" class="view hidden">
+  <span class="icon-big">👤</span>
+  <h2>あなたの名前は？</h2>
+  <p>予想コードに名前が入ります<br>（ニックネームでもOK）</p>
+  <div style="margin-bottom:16px">
+    <input type="text" id="player-name-input" placeholder="例: タロウ" maxlength="20" onkeydown="if(event.key==='Enter')startPredict()">
+  </div>
+  <div style="display:flex;gap:10px;flex-direction:column">
+    <button class="btn btn-primary" style="width:100%" onclick="startPredict()">期待度の割り振りへ →</button>
+    <div style="font-size:12px;color:var(--muted);text-align:center">
+      初日特例モード:
+      <label style="cursor:pointer;display:inline-flex;align-items:center;gap:4px;margin-left:6px">
+        <input type="checkbox" id="day1-mode" style="accent-color:var(--gold)">
+        <span style="color:var(--gold)">初日結果を見てから割り振る</span>
+      </label>
+    </div>
+  </div>
+</div>
+
+<!-- ════ WEIGHTS ════ -->
+<div id="v-weights" class="hidden">
+  <!-- Sticky top -->
+  <div class="sticky-top">
+    <div class="progress-bar-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+      <div class="progress-text" id="progress-text">0 / 48</div>
+    </div>
+    <div class="sel-indicator">
+      <div class="sel-num" id="sel-num-display" style="background:#333;color:#666;font-size:13px">?</div>
+      <span id="sel-hint" style="font-size:12px;color:var(--muted)">↑ 数字を選んでからチームをタップ</span>
+    </div>
+    <div class="num-strip-wrap" id="num-strip"></div>
+  </div>
+
+  <!-- Team list -->
+  <div id="team-list-wrap"></div>
+
+  <!-- Bottom actions -->
+  <div class="assign-actions">
+    <button class="btn btn-ghost btn-sm" onclick="randomAssign()">🎲 ランダム</button>
+    <button class="btn btn-ghost btn-sm" onclick="clearAll()">🗑 クリア</button>
+    <button class="btn btn-primary" id="done-btn" style="flex:1;opacity:.4;pointer-events:none" onclick="finishPredict()">完了 →</button>
+  </div>
+</div>
+
+<!-- ════ DONE ════ -->
+<div id="v-done" class="view hidden">
+  <div class="done-hero">
+    <span class="done-icon">🎉</span>
+    <h2>予想完了！</h2>
+    <p>下のコードをコピーして<br>ゲーム管理者に送ってください</p>
+  </div>
+  <div class="label">あなたの予想コード</div>
+  <div class="code-box" id="pred-code-display"></div>
+  <div id="done-room-section" style="display:none;margin-bottom:12px">
+    <button class="btn btn-primary" style="width:100%;background:linear-gradient(135deg,#4ade80,#16a34a);color:#000;font-size:15px" id="submit-room-btn" onclick="submitToRoom()">🚀 ルームに送信する</button>
+    <div style="font-size:11px;color:var(--muted);text-align:center;margin-top:4px">管理者に送らず直接登録されます</div>
+  </div>
+  <button class="btn btn-ghost" style="width:100%;margin-bottom:12px" onclick="copyCode()">📋 コードをコピー（管理者に送る場合）</button>
+  <div class="label" style="margin-top:16px">期待度 TOP 5</div>
+  <div class="top-picks" id="top-picks-display"></div>
+  <button class="btn btn-ghost" style="width:100%;margin-top:20px" onclick="goTo('v-landing')">トップに戻る</button>
+</div>
+
+<!-- ════ ADMIN ════ -->
+<div id="v-admin" class="hidden">
+  <div style="padding:0 16px;border-bottom:1px solid var(--border);position:sticky;top:52px;background:var(--bg);z-index:50">
+    <div class="admin-tabs">
+      <div class="admin-tab active" id="tab-players" onclick="adminTab('players')">👥 参加者</div>
+      <div class="admin-tab" id="tab-matches" onclick="adminTab('matches')">⚽ 試合結果</div>
+      <div class="admin-tab" id="tab-lb" onclick="adminTab('lb')">🏆 順位表</div>
+    </div>
+  </div>
+
+  <!-- Players tab -->
+  <div id="admin-players" class="view" style="padding-top:16px">
+    <div class="card" style="margin-bottom:14px">
+      <div class="label">予想コードを貼り付けて追加</div>
+      <textarea class="paste-area" id="code-paste" rows="3" placeholder="友達から受け取ったコードをここに貼り付け..."></textarea>
+      <button class="btn btn-primary btn-sm" style="margin-top:10px;width:100%" onclick="importPlayer()">+ 参加者を追加</button>
+    </div>
+    <div class="label">参加者一覧 (<span id="player-count">0</span>人)</div>
+    <div id="players-list"></div>
+    <button class="btn btn-danger btn-sm" style="margin-top:16px" onclick="clearAllPlayers()">ゲームをリセット</button>
+  </div>
+
+  <!-- Matches tab -->
+  <div id="admin-matches" class="view hidden" style="padding-top:16px">
+    <div class="sync-banner">
+      <div>
+        <div style="font-weight:600;font-size:14px">🔄 ESPN 自動同期</div>
+        <div id="sync-status" style="font-size:12px;color:var(--muted)">未同期</div>
+      </div>
+      <button class="btn btn-primary btn-sm" onclick="syncFromESPN()" id="sync-btn">同期する</button>
+    </div>
+    <div class="match-form">
+      <div class="label">フェーズ</div>
+      <div class="phase-select">
+        <select id="match-phase">
+          <option>グループステージ</option>
+          <option>ラウンド32</option>
+          <option>ラウンド16</option>
+          <option>準々決勝</option>
+          <option>準決勝</option>
+          <option>3位決定戦</option>
+          <option>決勝</option>
+        </select>
+      </div>
+      <div class="team-select-row">
+        <select id="match-t1" onchange="_checkPkRow()"><option value="">チーム選択</option></select>
+        <span class="vs-label">vs</span>
+        <select id="match-t2" onchange="_checkPkRow()"><option value="">チーム選択</option></select>
+      </div>
+      <div class="score-row">
+        <input type="number" class="score-input" id="score1" min="0" max="20" placeholder="0" oninput="_checkPkRow()">
+        <span class="vs-dash">-</span>
+        <input type="number" class="score-input" id="score2" min="0" max="20" placeholder="0" oninput="_checkPkRow()">
+      </div>
+      <div id="pk-row" style="display:none;margin:8px 0 4px">
+        <div class="label" style="margin-bottom:6px">⚽ PK勝者（同点の場合）</div>
+        <div style="display:flex;gap:8px">
+          <button id="pk-btn-t1" onclick="_setPK('team1')" style="flex:1;padding:8px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;font-size:13px" type="button">—</button>
+          <button id="pk-btn-t2" onclick="_setPK('team2')" style="flex:1;padding:8px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;font-size:13px" type="button">—</button>
+        </div>
+      </div>
+      <button class="btn btn-primary" style="width:100%;margin-top:6px" onclick="addMatch()">✓ 記録する</button>
+    </div>
+    <div class="label">記録済み試合 (<span id="match-count">0</span>試合)</div>
+    <div id="matches-list"></div>
+  </div>
+
+  <!-- Leaderboard tab -->
+  <div id="admin-lb" class="view hidden" style="padding-top:16px">
+    <div class="export-card" id="lb-share-card">
+      <div style="font-weight:700;font-size:14px;margin-bottom:4px">📤 友達に共有する</div>
+      <div id="lb-share-body"></div>
+    </div>
+    <div id="lb-list"></div>
+    <div id="lb-empty" style="text-align:center;padding:40px;color:var(--muted);font-size:14px">
+      参加者を追加して試合結果を入力すると<br>順位表が表示されます
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+// ══════════════════════════════════════════════════════
+//  TEAMS
+// ══════════════════════════════════════════════════════
+const TEAMS = [
+  {id:0,  n:"メキシコ",        f:"🇲🇽", g:"A"},
+  {id:1,  n:"南アフリカ",      f:"🇿🇦", g:"A"},
+  {id:2,  n:"韓国",            f:"🇰🇷", g:"A"},
+  {id:3,  n:"チェコ",          f:"🇨🇿", g:"A"},
+  {id:4,  n:"カナダ",          f:"🇨🇦", g:"B"},
+  {id:5,  n:"ボスニア",        f:"🇧🇦", g:"B"},
+  {id:6,  n:"カタール",        f:"🇶🇦", g:"B"},
+  {id:7,  n:"スイス",          f:"🇨🇭", g:"B"},
+  {id:8,  n:"ブラジル",        f:"🇧🇷", g:"C"},
+  {id:9,  n:"モロッコ",        f:"🇲🇦", g:"C"},
+  {id:10, n:"ハイチ",          f:"🇭🇹", g:"C"},
+  {id:11, n:"スコットランド",  f:"🏴󠁧󠁢󠁳󠁣󠁴󠁿", g:"C"},
+  {id:12, n:"アメリカ",        f:"🇺🇸", g:"D"},
+  {id:13, n:"パラグアイ",      f:"🇵🇾", g:"D"},
+  {id:14, n:"オーストラリア",  f:"🇦🇺", g:"D"},
+  {id:15, n:"トルコ",          f:"🇹🇷", g:"D"},
+  {id:16, n:"ドイツ",          f:"🇩🇪", g:"E"},
+  {id:17, n:"キュラソー",      f:"🇨🇼", g:"E"},
+  {id:18, n:"コートジボワール",f:"🇨🇮", g:"E"},
+  {id:19, n:"エクアドル",      f:"🇪🇨", g:"E"},
+  {id:20, n:"オランダ",        f:"🇳🇱", g:"F"},
+  {id:21, n:"日本",            f:"🇯🇵", g:"F"},
+  {id:22, n:"スウェーデン",    f:"🇸🇪", g:"F"},
+  {id:23, n:"チュニジア",      f:"🇹🇳", g:"F"},
+  {id:24, n:"ベルギー",        f:"🇧🇪", g:"G"},
+  {id:25, n:"エジプト",        f:"🇪🇬", g:"G"},
+  {id:26, n:"イラン",          f:"🇮🇷", g:"G"},
+  {id:27, n:"ニュージーランド",f:"🇳🇿", g:"G"},
+  {id:28, n:"スペイン",        f:"🇪🇸", g:"H"},
+  {id:29, n:"カーボベルデ",    f:"🇨🇻", g:"H"},
+  {id:30, n:"サウジアラビア",  f:"🇸🇦", g:"H"},
+  {id:31, n:"ウルグアイ",      f:"🇺🇾", g:"H"},
+  {id:32, n:"フランス",        f:"🇫🇷", g:"I"},
+  {id:33, n:"セネガル",        f:"🇸🇳", g:"I"},
+  {id:34, n:"イラク",          f:"🇮🇶", g:"I"},
+  {id:35, n:"ノルウェー",      f:"🇳🇴", g:"I"},
+  {id:36, n:"アルゼンチン",    f:"🇦🇷", g:"J"},
+  {id:37, n:"アルジェリア",    f:"🇩🇿", g:"J"},
+  {id:38, n:"オーストリア",    f:"🇦🇹", g:"J"},
+  {id:39, n:"ヨルダン",        f:"🇯🇴", g:"J"},
+  {id:40, n:"ポルトガル",      f:"🇵🇹", g:"K"},
+  {id:41, n:"コンゴ民主共和国",f:"🇨🇩", g:"K"},
+  {id:42, n:"ウズベキスタン",  f:"🇺🇿", g:"K"},
+  {id:43, n:"コロンビア",      f:"🇨🇴", g:"K"},
+  {id:44, n:"イングランド",    f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿", g:"L"},
+  {id:45, n:"クロアチア",      f:"🇭🇷", g:"L"},
+  {id:46, n:"ガーナ",          f:"🇬🇭", g:"L"},
+  {id:47, n:"パナマ",          f:"🇵🇦", g:"L"},
+];
+
+// ══════════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════════
+let G = loadState();
+
+function loadState(){
+  try{ return JSON.parse(localStorage.getItem('wc2026game'))||{players:[],matches:[]}; }
+  catch{ return {players:[],matches:[]}; }
+}
+// Current prediction session
+let myWeights  = {};   // {teamId: weight}
+let selWeight  = null; // selected number
+let myName     = '';
+let predCode   = '';
+let viewHistory= [];
+
+// ══════════════════════════════════════════════════════
+//  ROUTING
+// ══════════════════════════════════════════════════════
+function goTo(id, pushHistory=true){
+  document.querySelectorAll('[id^="v-"]').forEach(el=>el.classList.add('hidden'));
+  const el=document.getElementById(id);
+  if(el){ el.classList.remove('hidden'); }
+  if(pushHistory) viewHistory.push(id);
+  updateHeader(id);
+  window.scrollTo(0,0);
+}
+function goBack(){
+  viewHistory.pop();
+  const prev = viewHistory[viewHistory.length-1] || 'v-landing';
+  goTo(prev, false);
+}
+function updateHeader(id){
+  const isLanding = id==='v-landing';
+  document.getElementById('back-btn').classList.toggle('hidden', isLanding || id==='v-weights');
+  const titles = {
+    'v-landing':'⚽ 2026 WC 予想ゲーム',
+    'v-name':'予想を入力する',
+    'v-weights':'期待度を割り振る',
+    'v-done':'予想コード',
+    'v-admin':'🎮 ゲーム管理',
+    'v-stats':'📊 みんなの予想データ',
+  };
+  document.getElementById('header-title').textContent = titles[id]||'2026 WC 予想ゲーム';
+  if(id==='v-stats'){ loadStats().then(()=>syncLiveMatches()); showChatFab(true); }
+  else{ stopLivePolling(); showChatFab(false); }
+}
+async function goAdminOrPrompt(){
+  if(!fbDb){
+    // 未接続なら参加コード入力に誘導
+    const el=document.getElementById('join-code-input');
+    el.scrollIntoView({behavior:'smooth',block:'center'});
+    el.focus();
+    el.style.border='1px solid var(--gold)';
+    el.style.boxShadow='0 0 0 2px rgba(255,215,0,.25)';
+    setTimeout(()=>{ el.style.border=''; el.style.boxShadow=''; },2000);
+    toast('⚠️ 先に参加コードを入力してください');
+    return;
+  }
+  goAdmin();
+}
+async function goAdmin(){
+  goTo('v-admin');
+  adminTab('players');
+  renderPlayers();
+  renderMatchForm();
+  renderMatches();
+  if(fbDb){
+    // Firebase接続があれば管理者として扱う（信頼グループ前提）
+    if(!fbIsAdmin){ fbIsAdmin=true; const s=fbLoadSaved(); if(s) fbSaveSaved({...s,isAdmin:true}); }
+    try{
+      const data=await fbRead();
+      if(data){
+        const localNames=new Set(G.players.map(p=>p.name));
+        const newP=(data.players||[]).filter(p=>p.name&&!localNames.has(p.name));
+        if(newP.length) G.players.push(...newP);
+        // Firebaseの試合数がローカルより多ければ上書き
+        if((data.matches||[]).length>G.matches.length) G.matches=data.matches;
+        localStorage.setItem('wc2026game',JSON.stringify(G));
+      }
+    }catch{}
+    renderPlayers();
+    renderMatches();
+    // players取得後にESPN同期（空のplayersでFirebaseを上書きしないよう）
+    syncFromESPN(true);
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  NUMBER COLOR UTILITY
+// ══════════════════════════════════════════════════════
+function weightColor(w){
+  if(w>=43) return {bg:'linear-gradient(135deg,#FFD700,#FFA500)',color:'#000'};
+  if(w>=36) return {bg:'linear-gradient(135deg,#FF8C00,#FF6200)',color:'#fff'};
+  if(w>=27) return {bg:'linear-gradient(135deg,#4CAF50,#2E7D32)',color:'#fff'};
+  if(w>=18) return {bg:'linear-gradient(135deg,#0288D1,#01579B)',color:'#fff'};
+  if(w>=9)  return {bg:'linear-gradient(135deg,#546E7A,#37474F)',color:'#fff'};
+  return {bg:'linear-gradient(135deg,#2d3748,#1a202c)',color:'#aaa'};
+}
+
+// ══════════════════════════════════════════════════════
+//  NAME → PREDICT
+// ══════════════════════════════════════════════════════
+function startOrPromptJoin(){
+  if(!fbConnected){
+    const el=document.getElementById('join-code-input');
+    el.scrollIntoView({behavior:'smooth',block:'center'});
+    el.focus();
+    el.style.border='1px solid var(--gold)';
+    el.style.boxShadow='0 0 0 2px rgba(255,215,0,.25)';
+    setTimeout(()=>{ el.style.border=''; el.style.boxShadow=''; },2000);
+    toast('⚠️ 先に参加コードを入力してください');
+    return;
+  }
+  // 送信済みチェック
+  const submitted=localStorage.getItem(`wc2026submitted_${fbDb.roomId}`);
+  if(submitted){
+    toast(`⚠️ ${submitted} の予想は送信済みです。変更できません。`);
+    return;
+  }
+  goTo('v-name');
+}
+
+function startPredict(){
+  const inp = document.getElementById('player-name-input');
+  const name = inp.value.trim();
+  if(!name){ inp.focus(); toast('名前を入力してください'); return; }
+  myName = name;
+  localStorage.setItem('wc2026myname', name);
+  myWeights = {};
+  selWeight = null;
+  buildWeightView();
+  goTo('v-weights');
+}
+
+// ══════════════════════════════════════════════════════
+//  WEIGHT ASSIGN VIEW
+// ══════════════════════════════════════════════════════
+function buildWeightView(){
+  buildNumStrip();
+  buildTeamList();
+  updateProgress();
+}
+
+function buildNumStrip(){
+  const strip = document.getElementById('num-strip');
+  strip.innerHTML='';
+  for(let w=48;w>=1;w--){
+    const col = weightColor(w);
+    const btn = document.createElement('div');
+    btn.className='num-btn available';
+    btn.id=`nb-${w}`;
+    btn.style.background=col.bg;
+    btn.style.color=col.color;
+    btn.textContent=w;
+    btn.dataset.w=w;
+    btn.onclick=()=>selectWeight(w);
+    strip.appendChild(btn);
+  }
+}
+
+function buildTeamList(){
+  const wrap = document.getElementById('team-list-wrap');
+  wrap.innerHTML='';
+  const groups=['A','B','C','D','E','F','G','H','I','J','K','L'];
+  groups.forEach(g=>{
+    const sec=document.createElement('div');
+    sec.className='group-section';
+    const header=document.createElement('div');
+    header.className='group-header';
+    header.textContent=`グループ ${g}`;
+    sec.appendChild(header);
+    TEAMS.filter(t=>t.g===g).forEach(t=>{
+      sec.appendChild(buildTeamRow(t));
+    });
+    wrap.appendChild(sec);
+  });
+}
+
+function buildTeamRow(t){
+  const row=document.createElement('div');
+  row.className='team-row';
+  row.id=`tr-${t.id}`;
+  row.onclick=()=>assignWeight(t.id);
+  const w = myWeights[t.id];
+  const col = w ? weightColor(w) : null;
+  row.innerHTML=`
+    <span class="team-flag">${t.f}</span>
+    <div><div class="team-name">${t.n}</div><div class="team-group-tag">グループ ${t.g}</div></div>
+    <div class="weight-slot ${w?'filled':''}" id="ws-${t.id}"
+      style="${w?`background:${col.bg};color:${col.color};border-color:transparent`:''}"
+    >${w||''}</div>
+  `;
+  return row;
+}
+
+function selectWeight(w){
+  // deselect previous
+  if(selWeight){
+    const prev=document.getElementById(`nb-${selWeight}`);
+    if(prev) prev.classList.remove('selected');
+  }
+  // Check if already assigned → first remove it
+  const existingTeam = Object.entries(myWeights).find(([,v])=>v===w);
+  if(existingTeam){
+    // clicking again = deselect
+    if(selWeight===w){ selWeight=null; updateSelDisplay(); return; }
+  }
+  selWeight=w;
+  const btn=document.getElementById(`nb-${w}`);
+  if(btn) btn.classList.add('selected');
+  updateSelDisplay();
+  // Scroll the strip to show this button
+  if(btn) btn.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+}
+
+function assignWeight(teamId){
+  if(!selWeight){ toast('まず上の数字を選んでください'); return; }
+  const w=selWeight;
+  // Remove from any previous team
+  const prevTeam=Object.entries(myWeights).find(([,v])=>v===w);
+  if(prevTeam){
+    delete myWeights[parseInt(prevTeam[0])];
+    refreshTeamRow(parseInt(prevTeam[0]));
+    refreshNumBtn(w,null);
+  }
+  // Remove previous weight of this team
+  const prevW=myWeights[teamId];
+  if(prevW){
+    const nb=document.getElementById(`nb-${prevW}`);
+    if(nb){ nb.classList.remove('assigned'); nb.textContent=prevW; nb.style.opacity=''; }
+  }
+  myWeights[teamId]=w;
+  refreshTeamRow(teamId);
+  refreshNumBtn(w,teamId);
+  // Deselect
+  selWeight=null;
+  const btn=document.getElementById(`nb-${w}`);
+  if(btn) btn.classList.remove('selected');
+  updateSelDisplay();
+  updateProgress();
+}
+
+function refreshTeamRow(teamId){
+  const row=document.getElementById(`tr-${teamId}`);
+  if(!row) return;
+  const t=TEAMS.find(x=>x.id===teamId);
+  const w=myWeights[teamId];
+  const col=w?weightColor(w):null;
+  row.innerHTML=`
+    <span class="team-flag">${t.f}</span>
+    <div><div class="team-name">${t.n}</div><div class="team-group-tag">グループ ${t.g}</div></div>
+    <div class="weight-slot ${w?'filled':''}" id="ws-${t.id}"
+      style="${w?`background:${col.bg};color:${col.color};border-color:transparent`:''}"
+    >${w||''}</div>
+  `;
+}
+
+function refreshNumBtn(w, assignedTeamId){
+  const btn=document.getElementById(`nb-${w}`);
+  if(!btn) return;
+  if(assignedTeamId!==null){
+    const t=TEAMS.find(x=>x.id===assignedTeamId);
+    btn.textContent=t?t.f:w;
+    btn.classList.add('assigned');
+    btn.style.opacity='0.5';
+  } else {
+    btn.textContent=w;
+    btn.classList.remove('assigned');
+    btn.style.opacity='';
+  }
+  btn.classList.remove('selected');
+}
+
+function updateSelDisplay(){
+  const disp=document.getElementById('sel-num-display');
+  const hint=document.getElementById('sel-hint');
+  if(selWeight){
+    const col=weightColor(selWeight);
+    disp.style.background=col.bg;
+    disp.style.color=col.color;
+    disp.textContent=selWeight;
+    hint.textContent='→ チームをタップして割り当て';
+    hint.style.color='#fff';
+  } else {
+    disp.style.background='#333';
+    disp.style.color='#666';
+    disp.textContent='?';
+    hint.textContent='↑ 数字を選んでからチームをタップ';
+    hint.style.color='var(--muted)';
+  }
+}
+
+function updateProgress(){
+  const assigned=Object.keys(myWeights).length;
+  const pct=Math.round(assigned/48*100);
+  document.getElementById('progress-fill').style.width=pct+'%';
+  document.getElementById('progress-text').textContent=`${assigned} / 48`;
+  const doneBtn=document.getElementById('done-btn');
+  const complete=assigned===48;
+  doneBtn.style.opacity=complete?'1':'0.4';
+  doneBtn.style.pointerEvents=complete?'auto':'none';
+  // Highlight num strip slots that target already-hovered team
+  document.querySelectorAll('.team-row').forEach(r=>{
+    const slot=r.querySelector('.weight-slot');
+    if(slot && selWeight && !r.querySelector('.weight-slot.filled')){
+      slot.classList.toggle('target-ready', !!selWeight);
+    } else {
+      slot&&slot.classList.remove('target-ready');
+    }
+  });
+}
+
+function randomAssign(){
+  myWeights={};
+  const nums=[...Array(48)].map((_,i)=>i+1);
+  for(let i=nums.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [nums[i],nums[j]]=[nums[j],nums[i]];
+  }
+  TEAMS.forEach((t,i)=>{ myWeights[t.id]=nums[i]; });
+  buildWeightView();
+  selWeight=null;
+  toast('ランダムに割り当てました。調整してください！');
+}
+function clearAll(){
+  myWeights={};
+  buildWeightView();
+  selWeight=null;
+}
+
+function finishPredict(){
+  if(Object.keys(myWeights).length<48){ toast('全48チームに割り当ててください'); return; }
+  predCode=encPred(myName,myWeights);
+  document.getElementById('pred-code-display').textContent=predCode;
+  // Top picks
+  const sorted=[...TEAMS].sort((a,b)=>(myWeights[b.id]||0)-(myWeights[a.id]||0)).slice(0,5);
+  document.getElementById('top-picks-display').innerHTML=sorted.map(t=>{
+    const w=myWeights[t.id];
+    const col=weightColor(w);
+    return `<div class="pick-chip"><span style="font-size:18px">${t.f}</span><span>${t.n}</span><span class="pw" style="background:${col.bg};-webkit-background-clip:text;-webkit-text-fill-color:${col.color==='#000'?'#000':'transparent'}">${w}</span></div>`;
+  }).join('');
+  document.getElementById('done-room-section').style.display=fbConnected?'':'none';
+  if(fbConnected){
+    const btn=document.getElementById('submit-room-btn');
+    btn.disabled=false; btn.textContent='🚀 ルームに送信する';
+  }
+  goTo('v-done');
+}
+function copyCode(){
+  navigator.clipboard.writeText(predCode).then(()=>toast('コードをコピーしました！'));
+}
+
+// ══════════════════════════════════════════════════════
+//  ENCODE / DECODE
+// ══════════════════════════════════════════════════════
+function encPred(name,weights){
+  const a=TEAMS.map(t=>weights[t.id]||0);
+  return btoa(unescape(encodeURIComponent(JSON.stringify({v:1,name,a}))));
+}
+function decPred(code){
+  try{
+    const raw=JSON.parse(decodeURIComponent(escape(atob(code.trim()))));
+    if(!raw||!raw.name||!raw.a) return null;
+    const weights={};
+    TEAMS.forEach((t,i)=>{ if(raw.a[i]) weights[t.id]=raw.a[i]; });
+    return {name:raw.name,weights};
+  } catch(e){ return null; }
+}
+
+// ══════════════════════════════════════════════════════
+//  ADMIN: PLAYERS TAB
+// ══════════════════════════════════════════════════════
+const AVATARS=['🐉','🦁','🦊','🐺','🦅','🐬','🦁','🐯','🦋','🐸','🦀','🦄'];
+function importPlayer(){
+  const code=document.getElementById('code-paste').value.trim();
+  if(!code){ toast('コードを貼り付けてください'); return; }
+  const pred=decPred(code);
+  if(!pred){ toast('❌ 無効なコードです'); return; }
+  // Check duplicate name
+  if(G.players.find(p=>p.name===pred.name)){
+    toast(`⚠️ ${pred.name} はすでに追加されています`); return;
+  }
+  // Validate weights
+  const vals=Object.values(pred.weights).sort((a,b)=>a-b);
+  if(vals.length!==48||vals[0]!==1||vals[47]!==48||new Set(vals).size!==48){
+    toast('コードの内容が正しくありません'); return;
+  }
+  G.players.push({name:pred.name,weights:pred.weights,code,addedAt:Date.now()});
+  saveState();
+  document.getElementById('code-paste').value='';
+  renderPlayers();
+  toast(`✅ ${pred.name} を追加しました`);
+}
+function removePlayer(name){
+  if(!confirm(`${name} を削除しますか？`)) return;
+  G.players=G.players.filter(p=>p.name!==name);
+  saveState(); renderPlayers();
+}
+function clearAllPlayers(){
+  if(!confirm('ゲームデータを全てリセットしますか？')) return;
+  G={players:[],matches:[]};
+  saveState(); renderPlayers(); renderMatches();
+  toast('リセットしました');
+}
+function renderPlayers(){
+  const list=document.getElementById('players-list');
+  document.getElementById('player-count').textContent=G.players.length;
+  if(!G.players.length){
+    list.innerHTML='<div style="color:var(--muted);font-size:13px;padding:12px 0">まだ参加者がいません</div>'; return;
+  }
+  list.innerHTML=G.players.map((p,i)=>`
+    <div class="player-entry">
+      <div class="player-avatar" style="background:${['#1a3a1a','#1a1a3a','#3a1a1a','#1a3a3a','#2a1a3a','#3a2a1a'][i%6]}">
+        ${AVATARS[i%AVATARS.length]}
+      </div>
+      <div style="flex:1">
+        <div class="player-name-txt">${p.name}</div>
+        <div class="player-count">期待度 48チーム割り当て済み</div>
+      </div>
+      <button class="btn btn-danger btn-sm" onclick="removePlayer('${p.name}')">削除</button>
+    </div>
+  `).join('');
+}
+
+// ══════════════════════════════════════════════════════
+//  ADMIN: MATCHES TAB
+// ══════════════════════════════════════════════════════
+function renderMatchForm(){
+  const sel1=document.getElementById('match-t1');
+  const sel2=document.getElementById('match-t2');
+  const opts='<option value="">選択してください</option>'+
+    TEAMS.map(t=>`<option value="${t.id}">${t.f} ${t.n}</option>`).join('');
+  sel1.innerHTML=opts; sel2.innerHTML=opts;
+}
+let _pkWinner=null;
+function _checkPkRow(){
+  const s1=parseInt(document.getElementById('score1').value);
+  const s2=parseInt(document.getElementById('score2').value);
+  const row=document.getElementById('pk-row');
+  const t1=parseInt(document.getElementById('match-t1').value);
+  const t2=parseInt(document.getElementById('match-t2').value);
+  const isDraw=!isNaN(s1)&&!isNaN(s2)&&s1===s2;
+  row.style.display=isDraw?'':'none';
+  if(!isDraw) _pkWinner=null;
+  // Update button labels with team names
+  const team1=TEAMS.find(t=>t.id===t1), team2=TEAMS.find(t=>t.id===t2);
+  const b1=document.getElementById('pk-btn-t1'), b2=document.getElementById('pk-btn-t2');
+  if(b1) b1.textContent=team1?team1.f+' '+team1.n:'チーム1';
+  if(b2) b2.textContent=team2?team2.f+' '+team2.n:'チーム2';
+  _highlightPkBtn();
+}
+function _setPK(winner){
+  _pkWinner=_pkWinner===winner?null:winner; // トグル
+  _highlightPkBtn();
+}
+function _highlightPkBtn(){
+  const b1=document.getElementById('pk-btn-t1'), b2=document.getElementById('pk-btn-t2');
+  if(!b1||!b2) return;
+  b1.style.background=_pkWinner==='team1'?'var(--gold)':'transparent';
+  b1.style.color=_pkWinner==='team1'?'#000':'var(--text)';
+  b1.style.fontWeight=_pkWinner==='team1'?'700':'400';
+  b2.style.background=_pkWinner==='team2'?'var(--gold)':'transparent';
+  b2.style.color=_pkWinner==='team2'?'#000':'var(--text)';
+  b2.style.fontWeight=_pkWinner==='team2'?'700':'400';
+}
+function addMatch(){
+  const t1=parseInt(document.getElementById('match-t1').value);
+  const t2=parseInt(document.getElementById('match-t2').value);
+  const s1=parseInt(document.getElementById('score1').value);
+  const s2=parseInt(document.getElementById('score2').value);
+  const phase=document.getElementById('match-phase').value;
+  if(isNaN(t1)||isNaN(t2)){ toast('チームを選択してください'); return; }
+  if(t1===t2){ toast('同じチームは選択できません'); return; }
+  if(isNaN(s1)||isNaN(s2)||s1<0||s2<0){ toast('スコアを入力してください'); return; }
+  if(s1===s2&&!_pkWinner){ toast('同点の場合はPK勝者を選択してください'); return; }
+  const pk=s1===s2?_pkWinner:null;
+  G.matches.push({id:Date.now(),t1,t2,s1,s2,phase,pk,at:Date.now()});
+  saveState();
+  document.getElementById('score1').value='';
+  document.getElementById('score2').value='';
+  _pkWinner=null;
+  document.getElementById('pk-row').style.display='none';
+  renderMatches();
+  toast(`✅ 試合を記録しました`);
+}
+function deleteMatch(id){
+  G.matches=G.matches.filter(m=>m.id!==id);
+  saveState(); renderMatches();
+}
+function renderMatches(){
+  const list=document.getElementById('matches-list');
+  document.getElementById('match-count').textContent=G.matches.length;
+  if(!G.matches.length){ list.innerHTML='<div style="color:var(--muted);font-size:13px;padding:8px 0">試合結果なし</div>'; return; }
+  const sorted=[...G.matches].reverse();
+  list.innerHTML=sorted.map(m=>{
+    const t1=TEAMS.find(t=>t.id===m.t1); const t2=TEAMS.find(t=>t.id===m.t2);
+    return `<div class="match-item">
+      <span style="font-size:10px;color:var(--muted);min-width:60px">${m.phase}</span>
+      <span>${t1.f}${t1.n}${m.pk==='team1'?' 🏆':''}</span>
+      <span class="match-score">${m.s1}−${m.s2}${m.pk?'<span style="font-size:9px;color:var(--gold);display:block;text-align:center">PK</span>':''}</span>
+      <span>${t2.f}${t2.n}${m.pk==='team2'?' 🏆':''}</span>
+      <button class="match-del" onclick="deleteMatch(${m.id})">✕</button>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════════
+//  ADMIN: LEADERBOARD TAB
+// ══════════════════════════════════════════════════════
+function calcTeamPoints(D){
+  const src=(D||G).matches;
+  const pts={};
+  TEAMS.forEach(t=>pts[t.id]=0);
+  src.forEach(m=>{
+    if(m.s1===null||m.s2===null) return;
+    if(m.pk==='team1'){ pts[m.t1]+=3; }
+    else if(m.pk==='team2'){ pts[m.t2]+=3; }
+    else{
+      pts[m.t1]+= m.s1>m.s2?3:m.s1===m.s2?1:0;
+      pts[m.t2]+= m.s2>m.s1?3:m.s1===m.s2?1:0;
+    }
+  });
+  return pts;
+}
+// ── Win rate: Monte Carlo simulation ──
+function calcWinRates(D, espnEvents){
+  const currentPts=calcTeamPoints(D);
+
+  // Build group standings from stored matches (more reliable than ESPN for completed data)
+  const grpMap={};
+  TEAMS.forEach(t=>{ grpMap[t.id]={pts:0,gd:0,gf:0,played:0}; });
+  D.matches.forEach(m=>{
+    if(m.s1==null||m.s2==null) return;
+    let p1=0,p2=0;
+    if(m.pk==='team1'){p1=3;}else if(m.pk==='team2'){p2=3;}
+    else{p1=m.s1>m.s2?3:m.s1===m.s2?1:0; p2=m.s2>m.s1?3:m.s1===m.s2?1:0;}
+    grpMap[m.t1].pts+=p1; grpMap[m.t1].gd+=(m.s1-m.s2); grpMap[m.t1].gf+=m.s1; grpMap[m.t1].played++;
+    grpMap[m.t2].pts+=p2; grpMap[m.t2].gd+=(m.s2-m.s1); grpMap[m.t2].gf+=m.s2; grpMap[m.t2].played++;
+  });
+
+  // Check for remaining group matches (from ESPN unplayed events)
+  const remainGrpMatches={}; // id -> [{opp}]
+  TEAMS.forEach(t=>{ remainGrpMatches[t.id]=[]; });
+  if(espnEvents){
+    espnEvents.forEach(ev=>{
+      if(/round of|quarter|semi|final/i.test(ev.name||'')) return;
+      if(evIsDone(ev)||evIsLive(ev)) return;
+      const comps=ev.competitions?.[0]?.competitors||[];
+      if(comps.length<2) return;
+      const id0=ESPN_MAP[comps[0].team?.displayName||''];
+      const id1=ESPN_MAP[comps[1].team?.displayName||''];
+      if(id0==null||id1==null) return;
+      remainGrpMatches[id0].push(id1);
+      remainGrpMatches[id1].push(id0);
+    });
+  }
+
+  // Team strength for simulation: group pts per game (smoothed)
+  const strength={};
+  TEAMS.forEach(t=>{
+    const g=grpMap[t.id];
+    strength[t.id]=(g.pts+1)/(Math.max(g.played,1)*3+1); // 0-1 scale, smoothed
+  });
+
+  // Determine group qualifiers (top 2 per group) and 3rd-place teams
+  const qualTop2=new Set();
+  const third=[];
+  const eliminated=new Set();
+  const groups=[...new Set(TEAMS.map(t=>t.g))];
+  groups.forEach(g=>{
+    const gt=TEAMS.filter(t=>t.g===g);
+    const allDone=gt.every(t=>grpMap[t.id].played>=3);
+    if(!allDone) return;
+    const sorted=[...gt].sort((a,b)=>{
+      const sa=grpMap[a.id],sb=grpMap[b.id];
+      return sb.pts-sa.pts||sb.gd-sa.gd||sb.gf-sa.gf;
+    });
+    qualTop2.add(sorted[0].id); qualTop2.add(sorted[1].id);
+    third.push(sorted[2]);
+    eliminated.add(sorted[3].id);
+  });
+  // Best 8 third-place teams also advance (2026 format: 12 groups, top 2 + 8 best 3rd = 32)
+  const qual3rd=new Set([...third].sort((a,b)=>{
+    const sa=grpMap[a.id],sb=grpMap[b.id];
+    return sb.pts-sa.pts||sb.gd-sa.gd||sb.gf-sa.gf;
+  }).slice(0,8).map(t=>t.id));
+  third.filter(t=>!qual3rd.has(t.id)).forEach(t=>eliminated.add(t.id));
+
+  // Track teams already in KO (from KO phase in stored matches)
+  const inKO=new Set();
+  const koElim=new Set();
+  D.matches.forEach(m=>{
+    if(!m.phase||/グループ/i.test(m.phase)) return;
+    if(m.s1==null) return;
+    inKO.add(m.t1); inKO.add(m.t2);
+    // loser is eliminated from KO
+    if(m.pk==='team1') koElim.add(m.t2);
+    else if(m.pk==='team2') koElim.add(m.t1);
+    else if(m.s1>m.s2) koElim.add(m.t2);
+    else if(m.s2>m.s1) koElim.add(m.t1);
+  });
+  const koAlive=new Set([...inKO].filter(id=>!koElim.has(id)));
+
+  // Seed for simulation: teams still alive in KO + newly qualified (not yet played KO)
+  const qualifiedForKO=new Set([...qualTop2,...qual3rd,...koAlive]);
+  eliminated.forEach(id=>qualifiedForKO.delete(id));
+  koElim.forEach(id=>qualifiedForKO.delete(id));
+
+  // Monte Carlo: 500 simulations of remaining KO bracket
+  const N_SIM=500;
+  const winCount={};
+  D.players.forEach(p=>{ winCount[p.name]=0; });
+
+  for(let sim=0;sim<N_SIM;sim++){
+    // Simulate remaining group stage matches (if any)
+    const simPts={...currentPts};
+    const simGrp={};
+    TEAMS.forEach(t=>{ simGrp[t.id]={...grpMap[t.id]}; });
+
+    // Simulate unplayed group matches
+    const simmedPairs=new Set();
+    TEAMS.forEach(t=>{
+      remainGrpMatches[t.id].forEach(opp=>{
+        const key=[Math.min(t.id,opp),Math.max(t.id,opp)].join('-');
+        if(simmedPairs.has(key)) return;
+        simmedPairs.add(key);
+        const sA=strength[t.id],sB=strength[opp];
+        const r=Math.random()*(sA+sB);
+        if(r<sA*0.7){simPts[t.id]=(simPts[t.id]||0)+3; simGrp[t.id].pts+=3;}
+        else if(r<sA*0.7+Math.min(sA,sB)*0.6){simPts[t.id]=(simPts[t.id]||0)+1;simPts[opp]=(simPts[opp]||0)+1;simGrp[t.id].pts+=1;simGrp[opp].pts+=1;}
+        else{simPts[opp]=(simPts[opp]||0)+3;simGrp[opp].pts+=3;}
+      });
+    });
+
+    // Determine KO teams for this simulation (re-rank groups if any group not finished)
+    let koTeams=[...qualifiedForKO];
+    // Add any newly qualified from simulated group completion
+    groups.forEach(g=>{
+      const gt=TEAMS.filter(t=>t.g===g);
+      if(gt.every(t=>grpMap[t.id].played>=3)) return; // already determined above
+      const sorted=[...gt].sort((a,b)=>simGrp[b.id].pts-simGrp[a.id].pts||simGrp[b.id].gd-simGrp[a.id].gd);
+      koTeams.push(sorted[0].id,sorted[1].id);
+    });
+    koTeams=[...new Set(koTeams)];
+
+    // Shuffle for random bracket seeding
+    for(let i=koTeams.length-1;i>0;i--){
+      const j=Math.floor(Math.random()*(i+1));
+      [koTeams[i],koTeams[j]]=[koTeams[j],koTeams[i]];
+    }
+
+    // Simulate KO rounds until 1 team left
+    while(koTeams.length>1){
+      const next=[];
+      for(let i=0;i<koTeams.length-1;i+=2){
+        const a=koTeams[i],b=koTeams[i+1];
+        const sA=strength[a]||0.5,sB=strength[b]||0.5;
+        const winner=Math.random()<sA/(sA+sB)?a:b;
+        simPts[winner]=(simPts[winner]||0)+3;
+        next.push(winner);
+      }
+      if(koTeams.length%2===1) next.push(koTeams[koTeams.length-1]);
+      koTeams=next;
+    }
+
+    // Score each player for this sim
+    const scores=D.players.map(p=>({
+      name:p.name,
+      total:TEAMS.reduce((s,t)=>s+(p.weights[t.id]||0)*(simPts[t.id]||0),0)
+    }));
+    const maxScore=Math.max(...scores.map(p=>p.total));
+    const winners=scores.filter(p=>p.total===maxScore);
+    winners.forEach(p=>{ winCount[p.name]+=1/winners.length; });
+  }
+
+  return D.players.map(p=>{
+    const earned=TEAMS.reduce((s,t)=>s+(p.weights[t.id]||0)*(currentPts[t.id]||0),0);
+    return {...p,earned,rate:Math.round(winCount[p.name]/N_SIM*100)};
+  }).sort((a,b)=>b.rate-a.rate||b.earned-a.earned);
+}
+
+function calcLeaderboard(D){
+  const data=D||G;
+  const teamPts=calcTeamPoints(data);
+  const sorted=data.players.map(p=>{
+    let total=0;
+    const detail=[];
+    TEAMS.forEach(t=>{
+      const w=p.weights[t.id]||0;
+      const tp=teamPts[t.id]||0;
+      const score=w*tp;
+      total+=score;
+      if(w||tp) detail.push({team:t,w,tp,score});
+    });
+    detail.sort((a,b)=>b.score-a.score);
+    return {...p,total,detail};
+  }).sort((a,b)=>b.total-a.total);
+  // 同率ランク付与（同点なら同じ順位）
+  let rank=1;
+  sorted.forEach((p,i)=>{
+    if(i>0&&p.total<sorted[i-1].total) rank=i+1;
+    p.rank=rank;
+  });
+  return sorted;
+}
+
+function renderLeaderboard(){
+  const lb=calcLeaderboard();
+  const list=document.getElementById('lb-list');
+  const empty=document.getElementById('lb-empty');
+  if(!lb.length||!G.matches.length){ list.innerHTML=''; empty.style.display=''; return; }
+  empty.style.display='none';
+  const rankLabels=['🥇','🥈','🥉'];
+  list.innerHTML=lb.map((p,i)=>`
+    <div class="lb-card rank-${p.rank}" id="lbc-${i}">
+      <div class="lb-top" onclick="toggleDetail(${i})">
+        <div class="lb-rank">${rankLabels[p.rank-1]||p.rank}</div>
+        <div class="lb-info">
+          <div class="lb-player">${p.name}</div>
+          <div class="lb-score">記録試合: ${G.matches.length}試合</div>
+        </div>
+        <div class="lb-pts">${p.total.toLocaleString()}<br><span style="font-size:11px;color:var(--muted)">pt</span></div>
+        <div class="lb-chevron" id="chev-${i}">▼</div>
+      </div>
+      <div class="lb-detail" id="lbd-${i}">
+        <div class="detail-row" style="color:var(--muted);font-size:10px;padding-bottom:4px">
+          <span></span><span>チーム</span><span>期待</span><span>勝ち点</span><span style="text-align:right">獲得PT</span>
+        </div>
+        ${p.detail.slice(0,15).map(d=>`
+          <div class="detail-row">
+            <span>${d.team.f}</span>
+            <span style="font-size:11px">${d.team.n}</span>
+            <span style="color:${d.w>=36?'#FFD700':d.w>=24?'#4CAF50':'var(--muted)'};font-weight:700">${d.w}</span>
+            <span class="detail-pts">${d.tp}</span>
+            <span class="detail-total">${d.score>0?'+'+d.score.toLocaleString():d.score}</span>
+          </div>`).join('')}
+        ${p.detail.length>15?`<div style="font-size:10px;color:var(--muted);padding:4px 0">… 他 ${p.detail.length-15} チーム</div>`:''}
+      </div>
+    </div>
+  `).join('');
+}
+function toggleDetail(i){
+  const d=document.getElementById(`lbd-${i}`);
+  const c=document.getElementById(`chev-${i}`);
+  const open=d.classList.toggle('open');
+  c.textContent=open?'▲':'▼';
+}
+
+// ══════════════════════════════════════════════════════
+//  ADMIN TABS
+// ══════════════════════════════════════════════════════
+function adminTab(tab){
+  ['players','matches','lb'].forEach(t=>{
+    document.getElementById(`admin-${t}`).classList.toggle('hidden', t!==tab);
+    document.getElementById(`tab-${t}`).classList.toggle('active', t===tab);
+  });
+  if(tab==='lb'){
+    renderLeaderboard(); renderShareCard();
+    if(fbIsAdmin&&!G.matches.length) syncFromESPN(true);
+  }
+}
+function renderShareCard(){
+  const body=document.getElementById('lb-share-body');
+  if(fbConnected && fbDb?.roomId){
+    body.innerHTML=`
+      <div style="font-size:12px;color:var(--muted);margin-bottom:10px">友達はルームIDを入力するだけでリアルタイムに順位が見られます</div>
+      <div class="room-display" style="font-size:28px;letter-spacing:6px;padding:12px">${fbDb?.roomId}</div>
+      <button class="btn btn-primary" style="width:100%" onclick="copyRoomId()">📋 ルームIDをコピー</button>`;
+  } else {
+    body.innerHTML=`
+      <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Firebaseに接続するとルームIDで友達と共有できます</div>
+      <button class="btn btn-ghost" style="width:100%" onclick="openFbModal()">🔥 Firebase接続する</button>`;
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  TOAST
+// ══════════════════════════════════════════════════════
+let toastTimer=null;
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>el.classList.remove('show'),2400);
+}
+
+// ══════════════════════════════════════════════════════
+//  ESPN AUTO-SYNC
+// ══════════════════════════════════════════════════════
+const ESPN_MAP = {
+  'Mexico':0,'South Africa':1,'South Korea':2,'Czechia':3,'Czech Republic':3,
+  'Canada':4,'Bosnia-Herzegovina':5,'Bosnia and Herzegovina':5,'Qatar':6,'Switzerland':7,
+  'Brazil':8,'Morocco':9,'Haiti':10,'Scotland':11,
+  'United States':12,'USA':12,'Paraguay':13,'Australia':14,'Turkey':15,'Türkiye':15,
+  'Germany':16,'Curaçao':17,'Curacao':17,'Ivory Coast':18,"Côte d'Ivoire":18,'Cote d\'Ivoire':18,'Ecuador':19,
+  'Netherlands':20,'Japan':21,'Sweden':22,'Tunisia':23,
+  'Belgium':24,'Egypt':25,'Iran':26,'New Zealand':27,
+  'Spain':28,'Cape Verde':29,'Saudi Arabia':30,'Uruguay':31,
+  'France':32,'Senegal':33,'Iraq':34,'Norway':35,
+  'Argentina':36,'Algeria':37,'Austria':38,'Jordan':39,
+  'Portugal':40,'DR Congo':41,'Democratic Republic of Congo':41,'Congo DR':41,'Congo':41,'Uzbekistan':42,'Colombia':43,
+  'England':44,'Croatia':45,'Ghana':46,'Panama':47
+};
+
+function phaseFromNote(note){
+  if(!note) return 'グループステージ';
+  const n=note.toLowerCase();
+  if(n.includes('final') && !n.includes('quarter') && !n.includes('semi') && !n.includes('3rd')) return '決勝';
+  if(n.includes('semi')) return '準決勝';
+  if(n.includes('quarter')) return '準々決勝';
+  if(n.includes('3rd') || n.includes('third')) return '3位決定戦';
+  if(n.includes('round of 16')) return 'ラウンド16';
+  if(n.includes('round of 32')) return 'ラウンド32';
+  return 'グループステージ';
+}
+
+const COMPLETED_STATUSES=new Set(['STATUS_FULL_TIME','STATUS_FINAL','STATUS_FT','STATUS_FULL_PEN','STATUS_FINAL_AET','STATUS_FINAL_PEN','STATUS_POSTPONED']);
+// Use state-based helpers for robust live/done detection regardless of exact status name
+function evIsLive(ev){ const t=ev.status?.type; return t?.state==='in'||t?.name==='STATUS_IN_PROGRESS'||t?.name==='STATUS_HALFTIME'||t?.name==='STATUS_END_PERIOD'||t?.name==='STATUS_EXTRA_TIME'||t?.name==='STATUS_PENALTY'; }
+function evIsDone(ev){ const t=ev.status?.type; return t?.completed===true||t?.state==='post'||COMPLETED_STATUSES.has(t?.name||''); }
+let _espnCache=null;
+
+async function fetchESPN(){
+  const url='https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?limit=200&dates=20260611-20260719';
+  const res=await fetch(url);
+  if(!res.ok) throw new Error(`HTTP ${res.status}`);
+  const data=await res.json();
+  _espnCache=data.events||[];
+  return _espnCache;
+}
+
+let _syncInterval=null;
+function startAutoESPN(){
+  if(_syncInterval) clearInterval(_syncInterval);
+  _syncInterval=setInterval(()=>syncFromESPN(true), 5*60*1000);
+}
+
+async function syncFromESPN(silent=false){
+  const btn=document.getElementById('sync-btn');
+  const status=document.getElementById('sync-status');
+  if(btn){ btn.disabled=true; btn.textContent='同期中…'; }
+  if(status){ status.textContent='データ取得中…'; status.className=''; }
+  try{
+    const events=await fetchESPN();
+    let added=0;
+    for(const ev of events){
+      const comp=ev.competitions?.[0];
+      if(!comp) continue;
+      if(!evIsDone(ev)) continue;
+      const comps=comp.competitors||[];
+      if(comps.length<2) continue;
+      const c0=comps[0], c1=comps[1];
+      const n0=c0.team?.displayName||c0.team?.name||'';
+      const n1=c1.team?.displayName||c1.team?.name||'';
+      const id0=ESPN_MAP[n0]; const id1=ESPN_MAP[n1];
+      if(id0==null||id1==null) continue;
+      const s0=parseInt(c0.score||'0'); const s1=parseInt(c1.score||'0');
+      const note=ev.notes?.[0]?.headline||ev.name||'';
+      const phase=phaseFromNote(note);
+      // PK判定: スコアが同点でwinnerが設定されている場合
+      let pk=null;
+      if(s0===s1){
+        if(c0.winner===true) pk='team1';
+        else if(c1.winner===true) pk='team2';
+      }
+      const existsIdx=G.matches.findIndex(m=>(m.t1===id0&&m.t2===id1)||(m.t1===id1&&m.t2===id0));
+      if(existsIdx>=0){
+        // 既存試合のPKが未設定で今回確定した場合のみ上書き
+        const ex=G.matches[existsIdx];
+        if(!ex.pk&&pk){
+          // 保存時のチーム順序に合わせてpk方向を調整
+          const adjustedPk=(ex.t1===id1&&ex.t2===id0)?(pk==='team1'?'team2':'team1'):pk;
+          G.matches[existsIdx]={...ex,pk:adjustedPk};
+          added++;
+        }
+        continue;
+      }
+      G.matches.push({id:Date.now()+Math.random(),t1:id0,t2:id1,s1:s0,s2:s1,phase,pk,at:Date.now()});
+      added++;
+    }
+    // matches のみFirebaseに書く（playersを上書きしないよう）
+    localStorage.setItem('wc2026game',JSON.stringify(G));
+    if(fbConnected&&fbDb) fbWritePath('/matches',G.matches).catch(()=>{});
+    renderMatches();
+    const lbEl=document.getElementById('admin-lb');
+    if(lbEl&&!lbEl.classList.contains('hidden')) renderLeaderboard();
+    const now=new Date().toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'});
+    if(status){ status.textContent=`最終同期: ${now}${added>0?` (+${added}試合)`:''}`;  status.className='sync-status-ok'; }
+    if(!silent){
+      if(added>0) toast(`✅ ${added}試合を同期しました`);
+      else toast('✅ 最新の状態です');
+    } else if(added>0){
+      toast(`🔄 ${added}試合が自動更新されました`);
+    }
+  } catch(e){
+    if(status){ status.textContent=`エラー: ${e.message}`; status.className='sync-status-err'; }
+    if(!silent) toast('❌ 同期に失敗しました');
+  } finally{
+    if(btn){ btn.disabled=false; btn.textContent='同期する'; }
+  }
+}
+
+// spectatorData: set by Firebase viewer join, used by loadStats()
+let spectatorData=null;
+
+// ══════════════════════════════════════════════════════
+//  STATS VIEW
+// ══════════════════════════════════════════════════════
+async function loadStats(){
+  // 管理者もFirebaseから最新プレイヤーデータを取得して使う
+  let D;
+  if(spectatorData){
+    D=spectatorData;
+  } else if(fbConnected&&fbDb){
+    try{
+      const fbData=await fbRead();
+      if(fbData){
+        const fbMatches=(fbData.matches||[]).filter(Boolean);
+        const fbPlayers=fbData.players||[];
+        if(fbMatches.length) G.matches=fbMatches;
+        D={players:fbPlayers.length?fbPlayers:G.players, matches:G.matches};
+        localStorage.setItem('wc2026game',JSON.stringify(G));
+      } else { D=G; }
+    } catch(e){ D=G; }
+  } else {
+    D=G;
+  }
+  const isSpectator=!!spectatorData;
+  const empty=document.getElementById('stats-empty');
+  const sections=['stats-today-section','stats-lb-section','stats-pop-section','stats-dark-section','stats-match-section','stats-overtake-section','stats-picks-section'];
+
+  // Show spectator badge in header
+  const titleEl=document.getElementById('header-title');
+  if(isSpectator && titleEl.querySelector('.spectator-badge')===null){
+    titleEl.innerHTML='📊 みんなの予想データ<span class="spectator-badge">観戦中</span>';
+  }
+
+  if(!D.players.length){
+    empty.style.display='';
+    sections.forEach(id=>document.getElementById(id).style.display='none');
+    return;
+  }
+  empty.style.display='none';
+  sections.forEach(id=>document.getElementById(id).style.display='');
+
+  // ── ESPN events (fetch once, used for win rates + today's matches) ──
+  let espnEvents=null;
+  try{ espnEvents=_espnCache||(await fetchESPN()); }catch{}
+
+  // ── avg weight per team ──
+  const N=D.players.length;
+  const sumW={}, avgW={};
+  TEAMS.forEach(t=>{sumW[t.id]=0;});
+  D.players.forEach(p=>TEAMS.forEach(t=>{sumW[t.id]+=(p.weights[t.id]||0);}));
+  TEAMS.forEach(t=>{avgW[t.id]=sumW[t.id]/N;});
+
+  // ── team points ──
+  const tPts=calcTeamPoints(D);
+
+  // ── 暫定勝率（グループ順位表 + KOポテンシャル考慮） ──
+  const wrData=calcWinRates(D, espnEvents);
+  const rankE=['🥇','🥈','🥉'];
+  let wrRank=1;
+  wrData.forEach((p,i)=>{
+    if(i>0&&p.rate<wrData[i-1].rate) wrRank=i+1;
+    p.rank=wrRank;
+  });
+  const maxEarned=Math.max(...wrData.map(p=>p.earned),1);
+  document.getElementById('stats-pop-list').innerHTML=wrData.map(p=>{
+    const barPct=(p.earned/maxEarned*100).toFixed(1);
+    return `<div class="wr-row">
+      <div class="wr-header">
+        <div class="wr-name">${rankE[p.rank-1]||p.rank} ${p.name}</div>
+        <div class="wr-rate">${p.rate}%</div>
+      </div>
+      <div class="wr-bar-wrap">
+        <div class="wr-bar-earned" style="width:${barPct}%"></div>
+      </div>
+      <div class="wr-footer">
+        <span class="wr-legend"><span class="wr-dot" style="background:#f59e0b"></span>現在 ${p.earned.toLocaleString()}pt</span>
+        <span style="font-size:10px;color:var(--muted)">500回シミュレーション結果</span>
+      </div>
+    </div>`;
+  }).join('');
+
+  // ── Dark horses (low avg weight + actual points) ──
+  const darkScore=t=>(tPts[t.id]||0)>0 ? (tPts[t.id]*(49-avgW[t.id]))/48 : 0;
+  const darkHorses=[...TEAMS].filter(t=>(tPts[t.id]||0)>0).sort((a,b)=>darkScore(b)-darkScore(a)).slice(0,5);
+  if(darkHorses.length){
+    document.getElementById('stats-dark-list').innerHTML=darkHorses.map(t=>`
+      <div class="dark-card">
+        <div style="font-size:28px">${t.f}</div>
+        <div style="flex:1">
+          <div style="font-size:14px;font-weight:700">${t.n} <span class="dark-badge">大穴！</span></div>
+          <div class="dark-stats">みんなの平均期待度 ${avgW[t.id].toFixed(1)} / 現在の勝ち点 ${tPts[t.id]}</div>
+        </div>
+        <div style="text-align:right;font-size:11px;color:var(--muted)">爆発力<br><span style="font-size:18px;font-weight:700;color:var(--gold2)">${darkScore(t).toFixed(1)}</span></div>
+      </div>`).join('');
+  } else {
+    document.getElementById('stats-dark-list').innerHTML='<div style="color:var(--muted);font-size:13px">試合結果が入力されると表示されます</div>';
+    document.getElementById('stats-dark-section').style.display='none';
+  }
+
+  // ── Mini leaderboard (official, live-aware updates handled in syncLiveMatches) ──
+  renderOfficialLeaderboard(D);
+
+  // ── Full weight table ──
+  document.getElementById('stats-table-section').style.display='';
+  renderWeightTable(D, tPts, avgW);
+
+  // ── Each player's top 3 picks ──
+  document.getElementById('stats-picks-list').innerHTML=D.players.map(p=>{
+    const top3=TEAMS.filter(t=>p.weights[t.id]).sort((a,b)=>(p.weights[b.id]||0)-(p.weights[a.id]||0)).slice(0,3);
+    return `<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:8px;cursor:pointer;active:opacity:.7" onclick="showPlayerDetail('${p.name.replace(/'/g,"\\'")}')">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <div style="font-size:13px;font-weight:700">${p.name}</div>
+        <div style="font-size:11px;color:var(--accent)">全部見る →</div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        ${top3.map((t)=>`<div style="display:flex;align-items:center;gap:4px;background:rgba(255,255,255,.05);border-radius:6px;padding:4px 8px;font-size:12px">
+          <span style="font-size:16px">${t.f}</span>
+          <span>${t.n}</span>
+          <span style="color:var(--gold);font-weight:700;margin-left:2px">${p.weights[t.id]}</span>
+        </div>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+
+  // ── Match points breakdown ──
+  renderMatchBreakdown(D);
+
+  // ── Overtake simulator ──
+  renderOvertakeSimulator(D);
+
+  // ── Today's matches ──
+  if(espnEvents){ renderTodayMatches(espnEvents, D); }
+  else{ document.getElementById('stats-today-section').style.display='none'; }
+
+  // ── Presence (async, non-blocking) ──
+  if(fbConnected) refreshPresence();
+}
+
+// ══════════════════════════════════════════════════════
+//  OFFICIAL LEADERBOARD RENDERER
+// ══════════════════════════════════════════════════════
+function renderOfficialLeaderboard(D){
+  const lb=calcLeaderboard(D);
+  const rankEmoji=['🥇','🥈','🥉'];
+  const titleEl=document.getElementById('stats-lb-title');
+  if(titleEl) titleEl.innerHTML='🏆 現在の順位';
+  document.getElementById('stats-lb-list').innerHTML=lb.map((p,i)=>{
+    const isOnline=_onlineNames.has(p.name);
+    const dot=isOnline?`<span style="width:7px;height:7px;border-radius:50%;background:#4ade80;box-shadow:0 0 6px #4ade80;display:inline-block;flex-shrink:0"></span>`:'';
+    return `<div class="mini-lb-row" style="${p.rank===1?'border-color:rgba(255,215,0,.35);background:rgba(255,215,0,.04)':''}">
+      <div class="mini-lb-rank">${rankEmoji[p.rank-1]||p.rank}</div>
+      <div class="mini-lb-name" style="display:flex;align-items:center;gap:5px">${dot}${p.name}</div>
+      <div class="mini-lb-pts">${p.total.toLocaleString()}pt</div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════════
+//  TODAY'S / TOMORROW'S MATCHES RENDERER
+// ══════════════════════════════════════════════════════
+let _matchDayOffset=0; // 0=今日, 1=明日
+let _cachedMatchEvents=null, _cachedMatchD=null;
+
+function switchMatchDay(offset){
+  _matchDayOffset=offset;
+  const todayBtn=document.getElementById('tab-today');
+  const tomorrowBtn=document.getElementById('tab-tomorrow');
+  if(todayBtn) { todayBtn.style.background=offset===0?'var(--gold)':'transparent'; todayBtn.style.color=offset===0?'#000':'var(--muted)'; }
+  if(tomorrowBtn) { tomorrowBtn.style.background=offset===1?'var(--gold)':'transparent'; tomorrowBtn.style.color=offset===1?'#000':'var(--muted)'; }
+  if(_cachedMatchEvents&&_cachedMatchD) renderTodayMatches(_cachedMatchEvents,_cachedMatchD);
+}
+
+function renderTodayMatches(events, D){
+  _cachedMatchEvents=events; _cachedMatchD=D;
+  const sec=document.getElementById('stats-today-section');
+  const el=document.getElementById('stats-today-list');
+  const titleEl=document.getElementById('stats-today-title');
+  if(!sec||!el) return;
+
+  // 対象日を計算（JST基準）
+  const base=new Date();
+  base.setDate(base.getDate()+_matchDayOffset);
+  const targetStr=`${base.getFullYear()}-${String(base.getMonth()+1).padStart(2,'0')}-${String(base.getDate()).padStart(2,'0')}`;
+
+  const todayEvs=events.filter(ev=>{
+    // ライブ中の試合は今日タブのみ常に表示
+    if(evIsLive(ev)) return _matchDayOffset===0;
+    const d=new Date(ev.date);
+    // UTCをJSTに変換して日付判定
+    const jst=new Date(d.getTime()+9*60*60*1000);
+    const ds=`${jst.getUTCFullYear()}-${String(jst.getUTCMonth()+1).padStart(2,'0')}-${String(jst.getUTCDate()).padStart(2,'0')}`;
+    return ds===targetStr;
+  });
+
+  if(!todayEvs.length){
+    sec.style.display='';
+    el.innerHTML=`<div style="text-align:center;color:var(--muted);font-size:13px;padding:20px 0">${_matchDayOffset===0?'本日':'明日'}の試合はありません</div>`;
+    if(titleEl) titleEl.innerHTML=_matchDayOffset===0?'📅 本日の試合':'📅 明日の試合';
+    return;
+  }
+  sec.style.display='';
+
+  const hasLive=todayEvs.some(evIsLive);
+  if(titleEl) titleEl.innerHTML=_matchDayOffset===0
+    ?(hasLive?'📅 本日の試合 <span style="font-size:12px;color:#ff4444;font-weight:400;animation:livepulse 1.5s infinite">🔴 LIVE</span>':'📅 本日の試合')
+    :'📅 明日の試合';
+
+  el.innerHTML=todayEvs.map(ev=>{
+    const comp=ev.competitions?.[0];
+    const comps=comp?.competitors||[];
+    if(comps.length<2) return '';
+    const c0=comps[0],c1=comps[1];
+    const n0=c0.team?.displayName||'',n1=c1.team?.displayName||'';
+    const id0=ESPN_MAP[n0],id1=ESPN_MAP[n1];
+    const t0=id0!=null?TEAMS.find(t=>t.id===id0):null;
+    const t1=id1!=null?TEAMS.find(t=>t.id===id1):null;
+    const statusName=ev.status?.type?.name||'';
+    const clock=ev.status?.displayClock||'';
+    const isLive=evIsLive(ev);
+    const isDone=evIsDone(ev);
+    const s0=parseInt(c0.score||'0'),s1=parseInt(c1.score||'0');
+
+    // Kickoff time JST
+    const evDt=new Date(ev.date);
+    const kHH=String((evDt.getUTCHours()+9)%24).padStart(2,'0');
+    const kMM=String(evDt.getUTCMinutes()).padStart(2,'0');
+    const kickoff=`${kHH}:${kMM}`;
+
+    // Status badge
+    let badge='';
+    if(isLive){
+      badge=`<span style="font-size:10px;color:#ff4444;font-weight:700;background:rgba(255,68,68,.15);border-radius:4px;padding:2px 7px">🔴 試合中 ${clock}</span>`;
+    } else if(isDone){
+      badge=`<span style="font-size:10px;color:var(--muted);background:rgba(255,255,255,.06);border-radius:4px;padding:2px 7px">✅ 終了</span>`;
+    } else {
+      badge=`<span style="font-size:10px;color:var(--accent);background:rgba(0,198,255,.08);border-radius:4px;padding:2px 7px">⏰ ${kickoff} KO</span>`;
+    }
+
+    // Score display
+    const storedM=isDone?G.matches.find(m=>(m.t1===id0&&m.t2===id1)||(m.t1===id1&&m.t2===id0)):null;
+    const pkLabel=storedM?.pk?`<span style="font-size:9px;color:var(--gold);display:block;text-align:center;line-height:1">PK</span>`:'';
+    const pkWinnerName=storedM?.pk==='team1'?(storedM.t1===id0?n0:n1):storedM?.pk==='team2'?(storedM.t2===id1?n1:n0):'';
+    const scoreHtml=(isLive||isDone)
+      ?`<span class="match-report-score" style="${isLive?'color:#ff4444;font-size:18px':''}">${s0}−${s1}${pkLabel}</span>`
+      :`<span style="color:var(--muted);font-size:13px;padding:0 8px">vs</span>`;
+
+    // Point impact panel
+    let impactHtml='';
+    if(id0!=null&&id1!=null){
+      if(isLive||isDone){
+        let p0=0,p1=0;
+        if(isDone){
+          // check for penalties (stored as pk field in our match data)
+          const m=G.matches.find(m=>(m.t1===id0&&m.t2===id1)||(m.t1===id1&&m.t2===id0));
+          if(m){
+            if(m.pk==='team1'){ p0=m.t1===id0?3:0; p1=m.t1===id1?3:0; }
+            else if(m.pk==='team2'){ p0=m.t2===id0?3:0; p1=m.t2===id1?3:0; }
+            else { p0=m.s1>m.s2?(m.t1===id0?3:0):(m.s1===m.s2?1:(m.t2===id0?3:0));
+                   p1=m.s2>m.s1?(m.t2===id1?3:0):(m.s1===m.s2?1:(m.t1===id1?3:0)); }
+          } else {
+            if(s0>s1){p0=3;}else if(s1>s0){p1=3;}else{p0=1;p1=1;}
+          }
+        } else {
+          if(s0>s1){p0=3;}else if(s1>s0){p1=3;}else{p0=1;p1=1;}
+        }
+        const pp=D.players.map(p=>({
+          name:p.name,
+          gain:(p.weights[id0]||0)*p0+(p.weights[id1]||0)*p1
+        })).sort((a,b)=>b.gain-a.gain);
+        const maxG=pp[0]?.gain||0;
+        const label=isLive?'現在のスコアで確定した場合':'獲得PT';
+        impactHtml=`<div style="font-size:10px;color:var(--muted);margin:8px 0 4px">${label}</div>
+          <div class="match-pts-row">
+            ${pp.map(p=>`<div class="match-pt-pill${p.gain===maxG&&maxG>0?' winner':''}">
+              ${p.name} <b>+${p.gain}</b>
+            </div>`).join('')}
+          </div>`;
+      } else {
+        // Upcoming: show max gain per side
+        const gains0=D.players.map(p=>({name:p.name,gain:(p.weights[id0]||0)*3})).sort((a,b)=>b.gain-a.gain);
+        const gains1=D.players.map(p=>({name:p.name,gain:(p.weights[id1]||0)*3})).sort((a,b)=>b.gain-a.gain);
+        const maxSwing=Math.max(...D.players.map(p=>Math.abs(((p.weights[id0]||0)-(p.weights[id1]||0))*3)));
+        impactHtml=`<div class="spotlight-grid" style="margin-top:10px">
+          <div class="spotlight-box">
+            <div class="spotlight-label">${t0?t0.f+' ':''}勝利なら最大</div>
+            <div class="spotlight-val">+${gains0[0]?.gain||0}pt</div>
+            <div class="spotlight-name">${gains0[0]?.name||'—'}</div>
+          </div>
+          <div class="spotlight-box">
+            <div class="spotlight-label">${t1?t1.f+' ':''}勝利なら最大</div>
+            <div class="spotlight-val">+${gains1[0]?.gain||0}pt</div>
+            <div class="spotlight-name">${gains1[0]?.name||'—'}</div>
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--muted);text-align:center;margin-top:6px">最大逆転差 <span style="color:var(--gold);font-weight:700">${maxSwing}pt</span></div>`;
+      }
+    }
+
+    return `<div class="match-report-card" style="${isLive?'border-color:rgba(255,68,68,.4);background:rgba(255,68,68,.03)':''}">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        ${badge}
+        <span style="font-size:10px;color:var(--muted)">${phaseFromNote(ev.name||'')}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:4px;font-size:14px;font-weight:700;flex-wrap:wrap">
+        <span>${t0?t0.f:''} ${t0?t0.n:n0}${pkWinnerName===n0?' 🏆':''}</span>
+        ${scoreHtml}
+        <span>${pkWinnerName===n1?' 🏆':''}${t1?t1.f:''} ${t1?t1.n:n1}</span>
+      </div>
+      ${impactHtml}
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════════
+//  ONLINE PRESENCE
+// ══════════════════════════════════════════════════════
+let _onlineNames=new Set();
+let _presenceTimer=null;
+
+function _safeKey(n){ return n.replace(/[.#$\[\]/]/g,'_'); }
+function fbPresenceUrl(name){ return `${fbDb.databaseURL}/rooms/${fbDb.roomId}/presence/${_safeKey(name)}.json`; }
+function fbPresenceRootUrl(){ return `${fbDb.databaseURL}/rooms/${fbDb.roomId}/presence.json`; }
+
+async function sendHeartbeat(){
+  const name=myName||localStorage.getItem('wc2026myname');
+  if(!name||!fbDb) return;
+  try{
+    await fetch(fbPresenceUrl(name),{
+      method:'PUT',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({name,ts:Date.now()})
+    });
+    // PUT完了後に自分をすぐオンラインとして反映 → race condition解消
+    _onlineNames.add(name);
+    renderOnlineBar();
+    // 他のユーザーの状態も取得（PUT後なので自分のデータも確実に含まれる）
+    refreshPresence();
+  }catch{}
+}
+
+async function refreshPresence(){
+  if(!fbDb) return;
+  try{
+    const r=await fetch(fbPresenceRootUrl());
+    const data=await r.json()||{};
+    const now=Date.now();
+    const fromFirebase=new Set(
+      Object.values(data)
+        .filter(p=>p&&typeof p.ts==='number'&&(now-p.ts)<90000)
+        .map(p=>p.name)
+    );
+    // 自分のオフライン誤表示を防ぐ：ローカルで既にオンライン確認済みなら維持
+    const selfName=myName||localStorage.getItem('wc2026myname')||'';
+    if(selfName&&_onlineNames.has(selfName)) fromFirebase.add(selfName);
+    _onlineNames=fromFirebase;
+    renderOnlineBar();
+  }catch{}
+}
+
+function renderOnlineBar(){
+  const bar=document.getElementById('fb-online-row');
+  if(!bar) return;
+  const D=spectatorData||G;
+  if(!D.players.length||!fbConnected){ bar.style.display='none'; return; }
+  const allNames=D.players.map(p=>p.name);
+  const online=allNames.filter(n=>_onlineNames.has(n));
+  const offline=allNames.filter(n=>!_onlineNames.has(n));
+  if(!online.length&&!offline.length){ bar.style.display='none'; return; }
+  bar.style.display='flex';
+  bar.innerHTML=[
+    ...online.map(n=>`<span class="online-pill"><span class="online-pill-dot"></span>${n}</span>`),
+    ...offline.map(n=>`<span class="offline-pill"><span class="offline-pill-dot"></span>${n}</span>`)
+  ].join('');
+}
+
+function startPresenceHeartbeat(){
+  if(_presenceTimer) clearInterval(_presenceTimer);
+  sendHeartbeat();
+  _presenceTimer=setInterval(sendHeartbeat,25000);
+}
+
+// ══════════════════════════════════════════════════════
+//  CHAT
+// ══════════════════════════════════════════════════════
+let _chatPollTimer=null;
+let _lastChatTs=0;
+let _chatUnread=0;
+
+function showChatFab(show){
+  const fab=document.getElementById('chat-fab');
+  if(!fab) return;
+  if(show&&fbConnected) fab.classList.add('visible');
+  else fab.classList.remove('visible');
+}
+
+function openChat(){
+  const modal=document.getElementById('chat-modal');
+  if(!modal) return;
+  modal.classList.add('open');
+  _chatUnread=0;
+  updateChatBadge();
+  _updateChatNameState();
+  loadChatMessages();
+  if(_chatPollTimer) clearInterval(_chatPollTimer);
+  _chatPollTimer=setInterval(loadChatMessages,8000);
+}
+
+function _updateChatNameState(){
+  const picker=document.getElementById('chat-name-picker');
+  const chips=document.getElementById('chat-name-chips');
+  const input=document.getElementById('chat-input');
+  const sendBtn=document.getElementById('chat-send-btn');
+  const hasName=!!(myName||localStorage.getItem('wc2026myname'));
+  if(hasName){
+    picker.style.display='none';
+    input.disabled=false;
+    sendBtn.disabled=false;
+    input.placeholder='メッセージを入力…';
+    return;
+  }
+  // Show player name picker
+  picker.style.display='';
+  input.disabled=true;
+  sendBtn.disabled=true;
+  input.placeholder='上で名前を選んでください';
+  const D=spectatorData||G;
+  const names=D.players.map(p=>p.name).filter(Boolean);
+  chips.innerHTML=names.map(n=>`
+    <button onclick="selectChatName('${n.replace(/'/g,"\\'")}')" style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:7px 14px;font-size:13px;color:var(--text);cursor:pointer;transition:background .15s" onmousedown="this.style.background='rgba(0,198,255,.18)'" onmouseup="this.style.background=''">${n}</button>
+  `).join('');
+}
+
+function selectChatName(name){
+  myName=name;
+  localStorage.setItem('wc2026myname',name);
+  sendHeartbeat();
+  _updateChatNameState();
+  document.getElementById('chat-input').focus();
+}
+
+function closeChat(){
+  const modal=document.getElementById('chat-modal');
+  if(modal) modal.classList.remove('open');
+  if(_chatPollTimer){ clearInterval(_chatPollTimer); _chatPollTimer=null; }
+}
+
+function updateChatBadge(){
+  const badge=document.getElementById('chat-fab-badge');
+  if(!badge) return;
+  if(_chatUnread>0){ badge.style.display='flex'; badge.textContent=_chatUnread>9?'9+':_chatUnread; }
+  else badge.style.display='none';
+}
+
+async function loadChatMessages(){
+  if(!fbDb) return;
+  try{
+    const r=await fetch(`${fbDb.databaseURL}/rooms/${fbDb.roomId}/chat.json`);
+    const data=await r.json();
+    if(!data){ renderChatMessages([]); return; }
+    const msgs=Object.values(data).sort((a,b)=>a.ts-b.ts);
+    // Count unread if modal is closed
+    const modal=document.getElementById('chat-modal');
+    if(!modal?.classList.contains('open')){
+      const newMsgs=msgs.filter(m=>m.ts>_lastChatTs);
+      if(_lastChatTs>0&&newMsgs.length){ _chatUnread+=newMsgs.length; updateChatBadge(); }
+    }
+    if(msgs.length) _lastChatTs=Math.max(_lastChatTs,...msgs.map(m=>m.ts));
+    renderChatMessages(msgs);
+  }catch{}
+}
+
+function renderChatMessages(msgs){
+  const el=document.getElementById('chat-messages');
+  if(!el) return;
+  const me=myName||localStorage.getItem('wc2026myname')||'';
+  if(!msgs.length){ el.innerHTML='<div class="chat-empty">まだメッセージはありません<br><span style="font-size:20px;margin-top:8px;display:block">💬</span></div>'; return; }
+  const fmt=ts=>{
+    const d=new Date(ts);
+    return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+  };
+  el.innerHTML=msgs.map(m=>{
+    const isMine=m.name===me;
+    return `<div class="chat-msg ${isMine?'mine':'other'}">
+      ${!isMine?`<div class="chat-msg-meta">${m.name}</div>`:''}
+      <div class="chat-msg-bubble">${escapeHtml(m.text)}</div>
+      <div class="chat-msg-meta">${fmt(m.ts)}</div>
+    </div>`;
+  }).join('');
+  // Scroll to bottom
+  el.scrollTop=el.scrollHeight;
+}
+
+function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+async function sendChatMessage(){
+  const input=document.getElementById('chat-input');
+  const btn=document.getElementById('chat-send-btn');
+  const text=(input?.value||'').trim();
+  if(!text||!fbDb) return;
+  const name=myName||localStorage.getItem('wc2026myname')||'匿名';
+  input.value='';
+  btn.disabled=true;
+  try{
+    await fetch(`${fbDb.databaseURL}/rooms/${fbDb.roomId}/chat.json`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({name,text,ts:Date.now()})
+    });
+    await loadChatMessages();
+  }catch{
+    toast('❌ 送信に失敗しました');
+  }finally{
+    btn.disabled=false;
+    input.focus();
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  GOAL CELEBRATION ENGINE
+// ══════════════════════════════════════════════════════
+let _prevLiveScores={};
+let _goalTimeout=null;
+let _goalRafId=null;
+
+function dismissGoal(){
+  const ov=document.getElementById('goal-overlay');
+  if(!ov||!ov.classList.contains('active')) return;
+  ov.style.animation='_goalOverlayOut .55s cubic-bezier(.4,0,.6,1) forwards';
+  setTimeout(()=>{ ov.classList.remove('active'); ov.style.animation=''; },560);
+  if(_goalTimeout){ clearTimeout(_goalTimeout); _goalTimeout=null; }
+  if(_goalRafId){ cancelAnimationFrame(_goalRafId); _goalRafId=null; }
+}
+
+function triggerGoalCelebration(teamFlag, teamName, topPlayer, ptGain){
+  const ov=document.getElementById('goal-overlay');
+  const canvas=document.getElementById('goal-canvas');
+  if(!ov||!canvas) return;
+
+  // Reset & show
+  ov.style.animation='_goalOverlayIn .35s cubic-bezier(.2,.8,.4,1) forwards';
+  ov.classList.add('active');
+
+  // Content
+  document.getElementById('goal-emoji').textContent=teamFlag||'⚽';
+  document.getElementById('goal-team').textContent=`${teamFlag} ${teamName} がゴール！`;
+  document.getElementById('goal-benefit').innerHTML=topPlayer
+    ?`<span style="color:rgba(255,255,255,.45)">最大ポイント獲得</span><br><strong style="font-size:17px;color:#FFD700">${topPlayer}</strong> <span style="color:rgba(255,255,255,.7)">+${ptGain}pt</span>`
+    :'';
+
+  // Animate card & children
+  const card=document.getElementById('goal-card');
+  const emoji=document.getElementById('goal-emoji');
+  const text=document.getElementById('goal-text');
+  const team=document.getElementById('goal-team');
+  const div=document.getElementById('goal-divider');
+  const ben=document.getElementById('goal-benefit');
+  const dis=document.getElementById('goal-dismiss');
+  card.style.animation='_goalCardIn .6s cubic-bezier(.34,1.4,.64,1) forwards';
+  emoji.style.animation='_goalEmojiIn .56s cubic-bezier(.34,1.56,.64,1) .1s both';
+  text.style.animation='_goalTextIn .65s cubic-bezier(.34,1.3,.64,1) .16s both';
+  team.style.animation='_goalFadeUp .4s ease .42s both';
+  div.style.animation='_goalFadeUp .35s ease .52s both';
+  ben.style.animation='_goalFadeUp .4s ease .62s both';
+  dis.style.animation='_goalFadeUp .35s ease 1.3s both';
+
+  // Ripple rings
+  const ov_rect=ov.getBoundingClientRect();
+  const rSizes=[120,200,300];
+  // Remove old ripples
+  ov.querySelectorAll('.goal-ripple-el').forEach(r=>r.remove());
+  rSizes.forEach((sz,i)=>{
+    const r=document.createElement('div');
+    r.className='goal-ripple-el';
+    r.style.cssText=`width:${sz}px;height:${sz}px;border:${1.5-i*.3}px solid rgba(255,${180-i*30},0,${.7-i*.18});animation:_goalRipple ${.8+i*.25}s cubic-bezier(.2,.7,.3,1) ${i*.15}s forwards`;
+    ov.appendChild(r);
+  });
+
+  // Canvas particle burst
+  canvas.width=window.innerWidth;
+  canvas.height=window.innerHeight;
+  _runGoalParticles(canvas);
+
+  // Auto-dismiss
+  if(_goalTimeout) clearTimeout(_goalTimeout);
+  _goalTimeout=setTimeout(dismissGoal, 5000);
+}
+
+function _runGoalParticles(canvas){
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width, H=canvas.height;
+  const cx=W/2, cy=H/2;
+  const COLS=['#FFD700','#FFC107','#FF8C00','#FFB300','#FFFFFF','#FF6B35','#FFE066','#FFA000'];
+  const pts=[];
+
+  for(let i=0;i<160;i++){
+    const angle=(Math.PI*2*i/160)+(Math.random()-.5)*.6;
+    const spd=6+Math.random()*18;
+    const isRect=Math.random()>.35;
+    pts.push({
+      x:cx, y:cy,
+      vx:Math.cos(angle)*spd,
+      vy:Math.sin(angle)*spd-(Math.random()*5),
+      r:1.5+Math.random()*4.5,
+      w:3+Math.random()*9, h:5+Math.random()*18,
+      col:COLS[Math.floor(Math.random()*COLS.length)],
+      life:1,
+      decay:.011+Math.random()*.016,
+      grav:.16+Math.random()*.14,
+      spin:(Math.random()-.5)*.28,
+      rot:Math.random()*Math.PI*2,
+      isRect
+    });
+  }
+
+  function frame(){
+    ctx.clearRect(0,0,W,H);
+    let alive=false;
+    for(const p of pts){
+      if(p.life<=0) continue;
+      alive=true;
+      p.x+=p.vx; p.y+=p.vy;
+      p.vy+=p.grav; p.vx*=.989;
+      p.life-=p.decay;
+      p.rot+=p.spin;
+      const a=Math.max(0,p.life*p.life);
+      ctx.save();
+      ctx.globalAlpha=a;
+      ctx.translate(p.x,p.y); ctx.rotate(p.rot);
+      ctx.fillStyle=p.col;
+      if(p.isRect){ ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h); }
+      else{ ctx.beginPath(); ctx.arc(0,0,p.r,0,Math.PI*2); ctx.fill(); }
+      ctx.restore();
+    }
+    if(alive) _goalRafId=requestAnimationFrame(frame);
+    else{ ctx.clearRect(0,0,W,H); _goalRafId=null; }
+  }
+  _goalRafId=requestAnimationFrame(frame);
+}
+
+// ══════════════════════════════════════════════════════
+//  MATCH END HIGHLIGHT CARD
+// ══════════════════════════════════════════════════════
+let _matchEndTimer=null;
+let _prevLiveMatchIds=new Set();
+let _matchEndCooldown=new Set();
+
+function dismissMatchEnd(){
+  const card=document.getElementById('match-end-card');
+  if(card) card.classList.remove('show');
+  if(_matchEndTimer){ clearTimeout(_matchEndTimer); _matchEndTimer=null; }
+}
+
+function showMatchEndCard({flag0,name0,score0,flag1,name1,score1,phase,gains}){
+  const card=document.getElementById('match-end-card');
+  const content=document.getElementById('match-end-content');
+  const prog=document.getElementById('me-progress');
+  if(!card||!content) return;
+
+  const rankEmoji=['🥇','🥈','🥉'];
+  const maxGain=Math.max(...gains.map(g=>g.gain),1);
+  const isDraw=score0===score1;
+  const winnerFlag=score0>score1?flag0:score1>score0?flag1:'';
+
+  content.innerHTML=`
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <span style="font-size:11px;font-weight:700;color:#4ade80;letter-spacing:.5px">✅ 試合終了</span>
+      <span style="font-size:10px;color:var(--muted)">${phase}</span>
+    </div>
+    <div id="me-score-row">
+      <span class="me-team">${flag0} ${name0}</span>
+      <span class="me-score-box">${score0} − ${score1}</span>
+      <span class="me-team">${name1} ${flag1}</span>
+    </div>
+    <div style="text-align:center;font-size:11px;color:var(--muted);margin-bottom:10px">
+      ${isDraw?'引き分け':winnerFlag+' 勝利'}
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,.07);padding-top:10px">
+      ${gains.map((g,i)=>`
+        <div class="me-gain-row">
+          <span style="width:20px;text-align:center">${rankEmoji[i]||i+1}</span>
+          <span style="font-weight:600;flex:1">${g.name}</span>
+          <div class="me-gain-bar-wrap"><div class="me-gain-bar" style="width:${(g.gain/maxGain*100).toFixed(0)}%"></div></div>
+          <span class="me-gain-pt">+${g.gain}pt</span>
+        </div>`).join('')}
+    </div>
+    <div style="text-align:center;font-size:10px;color:rgba(255,255,255,.18);margin-top:10px">タップして閉じる</div>`;
+
+  card.classList.add('show');
+
+  // Progress bar auto-dismiss
+  const DURATION=8000;
+  prog.style.transition='none';
+  prog.style.width='100%';
+  setTimeout(()=>{
+    prog.style.transition=`width ${DURATION}ms linear`;
+    prog.style.width='0%';
+  },50);
+
+  if(_matchEndTimer) clearTimeout(_matchEndTimer);
+  _matchEndTimer=setTimeout(dismissMatchEnd, DURATION);
+}
+
+function handleMatchEnd(ev, D){
+  const comps=ev.competitions?.[0]?.competitors||[];
+  if(comps.length<2) return;
+  const c0=comps[0], c1=comps[1];
+  const id0=ESPN_MAP[c0.team?.displayName||''];
+  const id1=ESPN_MAP[c1.team?.displayName||''];
+  const t0=id0!=null?TEAMS.find(t=>t.id===id0):null;
+  const t1=id1!=null?TEAMS.find(t=>t.id===id1):null;
+  const s0=parseInt(c0.score||'0'), s1=parseInt(c1.score||'0');
+  let p0=0,p1=0;
+  if(s0>s1){p0=3;}else if(s1>s0){p1=3;}else{p0=1;p1=1;}
+  const gains=D.players.map(p=>({
+    name:p.name,
+    gain:(id0!=null?p.weights[id0]||0:0)*p0+(id1!=null?p.weights[id1]||0:0)*p1
+  })).sort((a,b)=>b.gain-a.gain);
+  showMatchEndCard({
+    flag0:t0?.f||'', name0:t0?.n||(c0.team?.displayName||''),score0:s0,
+    flag1:t1?.f||'', name1:t1?.n||(c1.team?.displayName||''),score1:s1,
+    phase:phaseFromNote(ev.name||''),
+    gains
+  });
+}
+
+// ══════════════════════════════════════════════════════
+//  LIVE MATCH POLLING
+// ══════════════════════════════════════════════════════
+let _liveInterval=null;
+async function syncLiveMatches(){
+  try{
+    // Always fetch fresh data for live polling (bypass cache)
+    const events=await fetchESPN();
+    const D=spectatorData||G;
+    if(!D.players.length) return;
+
+    // ── Detect goals scored since last poll ──
+    const newScores={};
+    events.filter(evIsLive).forEach(ev=>{
+      const comps=ev.competitions?.[0]?.competitors||[];
+      if(comps.length<2) return;
+      const s0=parseInt(comps[0].score||'0'), s1=parseInt(comps[1].score||'0');
+      newScores[ev.id]=[s0,s1];
+      const prev=_prevLiveScores[ev.id];
+      if(prev){
+        const [ps0,ps1]=prev;
+        if(s0>ps0||s1>ps1){
+          // Goal! Identify scoring team + best beneficiary
+          const scoringIdx=s0>ps0?0:1;
+          const sc=comps[scoringIdx];
+          const dn=sc.team?.displayName||'';
+          const tid=ESPN_MAP[dn];
+          const t=tid!=null?TEAMS.find(t=>t.id===tid):null;
+          let topPlayer=null, topGain=0;
+          if(tid!=null && D.players.length){
+            D.players.forEach(p=>{ const g=(p.weights[tid]||0)*3; if(g>topGain){topGain=g;topPlayer=p.name;} });
+          }
+          triggerGoalCelebration(t?t.f:'⚽', t?t.n:dn, topPlayer, topGain);
+        }
+      }
+    });
+    _prevLiveScores=newScores;
+
+    // ── Detect match end (was live last poll, now done) ──
+    const nowLiveIds=new Set(events.filter(evIsLive).map(ev=>ev.id));
+    for(const id of _prevLiveMatchIds){
+      if(!nowLiveIds.has(id)&&!_matchEndCooldown.has(id)){
+        const ev=events.find(e=>e.id===id);
+        if(ev&&evIsDone(ev)){ _matchEndCooldown.add(id); handleMatchEnd(ev,D); }
+      }
+    }
+    _prevLiveMatchIds=nowLiveIds;
+
+    // Update today's match cards with latest scores
+    renderTodayMatches(events, D);
+
+    // Check if any matches are still live
+    const live=events.filter(evIsLive);
+
+    if(live.length){
+      // Show provisional leaderboard during live matches
+      const titleEl=document.getElementById('stats-lb-title');
+      if(titleEl) titleEl.innerHTML='🔴 暫定順位 <span style="font-size:11px;font-weight:400;color:var(--muted)">(試合中のスコアを含む)</span>';
+
+      // Calculate provisional team points = official + live provisional
+      const tPts=calcTeamPoints(D); // from completed matches
+      live.forEach(ev=>{
+        const comps=ev.competitions?.[0]?.competitors||[];
+        if(comps.length<2) return;
+        const id0=ESPN_MAP[comps[0].team?.displayName||''];
+        const id1=ESPN_MAP[comps[1].team?.displayName||''];
+        if(id0==null||id1==null) return;
+        const s0=parseInt(comps[0].score||'0'),s1=parseInt(comps[1].score||'0');
+        if(s0>s1){ tPts[id0]=(tPts[id0]||0)+3; }
+        else if(s1>s0){ tPts[id1]=(tPts[id1]||0)+3; }
+        else{ tPts[id0]=(tPts[id0]||0)+1; tPts[id1]=(tPts[id1]||0)+1; }
+      });
+
+      // Build provisional leaderboard
+      const officialLB=calcLeaderboard(D);
+      const officialRanks={};
+      officialLB.forEach(p=>{ officialRanks[p.name]=p.rank; });
+
+      const provLB=D.players.map(p=>{
+        let total=0;
+        TEAMS.forEach(t=>{ total+=(p.weights[t.id]||0)*(tPts[t.id]||0); });
+        return {name:p.name,total};
+      }).sort((a,b)=>b.total-a.total);
+      // 暫定順位にも同率ランク付与
+      let provRank=1;
+      provLB.forEach((p,i)=>{
+        if(i>0&&p.total<provLB[i-1].total) provRank=i+1;
+        p.rank=provRank;
+      });
+
+      const rankEmoji=['🥇','🥈','🥉'];
+      document.getElementById('stats-lb-list').innerHTML=provLB.map(p=>{
+        const oldRank=officialRanks[p.name]||p.rank;
+        const delta=oldRank-p.rank;
+        const deltaHtml=delta>0
+          ?`<span style="color:#4ade80;font-size:11px;font-weight:700">▲${delta}</span>`
+          :delta<0
+          ?`<span style="color:#ff6b6b;font-size:11px;font-weight:700">▼${Math.abs(delta)}</span>`
+          :`<span style="color:var(--muted);font-size:11px">−</span>`;
+        const isOnline=_onlineNames.has(p.name);
+        const dot=isOnline?`<span style="width:7px;height:7px;border-radius:50%;background:#4ade80;box-shadow:0 0 6px #4ade80;display:inline-block;margin-right:4px;flex-shrink:0"></span>`:'';
+        return `<div class="mini-lb-row" style="${p.rank===1?'border-color:rgba(255,68,68,.35);background:rgba(255,68,68,.04)':''}">
+          <div class="mini-lb-rank">${rankEmoji[p.rank-1]||p.rank}</div>
+          <div class="mini-lb-name" style="display:flex;align-items:center;gap:2px">${dot}${p.name}</div>
+          <div style="display:flex;align-items:center;gap:6px">
+            ${deltaHtml}
+            <div class="mini-lb-pts">${p.total.toLocaleString()}pt</div>
+          </div>
+        </div>`;
+      }).join('');
+
+      if(!_liveInterval) _liveInterval=setInterval(syncLiveMatches,60*1000);
+    } else {
+      // No live matches — restore official leaderboard, stop polling
+      renderOfficialLeaderboard(D);
+      stopLivePolling();
+    }
+  } catch(e){ /* silent */ }
+}
+function stopLivePolling(){
+  if(_liveInterval){ clearInterval(_liveInterval); _liveInterval=null; }
+}
+
+// ══════════════════════════════════════════════════════
+//  MATCH BREAKDOWN
+// ══════════════════════════════════════════════════════
+function renderMatchBreakdown(D){
+  const el=document.getElementById('stats-match-list');
+  const sec=document.getElementById('stats-match-section');
+  const matches=[...D.matches].filter(m=>m.s1!=null).reverse();
+  if(!matches.length){
+    sec.style.display='none'; return;
+  }
+  sec.style.display='';
+  el.innerHTML=matches.slice(0,10).map(m=>{
+    const t1=TEAMS.find(t=>t.id===m.t1), t2=TEAMS.find(t=>t.id===m.t2);
+    if(!t1||!t2) return '';
+    let p1=0,p2=0;
+    if(m.pk==='team1'){p1=3;}else if(m.pk==='team2'){p2=3;}
+    else{p1=m.s1>m.s2?3:m.s1===m.s2?1:0; p2=m.s2>m.s1?3:m.s1===m.s2?1:0;}
+    const pp=D.players.map(p=>({
+      name:p.name, gain:(p.weights[m.t1]||0)*p1+(p.weights[m.t2]||0)*p2
+    })).sort((a,b)=>b.gain-a.gain);
+    const maxG=pp[0]?.gain||0;
+    const pkBadge=m.pk?`<span style="font-size:9px;color:var(--gold);display:block;text-align:center;line-height:1">PK</span>`:'';
+    return `<div class="match-report-card">
+      <div style="display:flex;align-items:center;gap:3px;font-size:13px;font-weight:700;flex-wrap:wrap">
+        <span>${t1.f}${t1.n}${m.pk==='team1'?' 🏆':''}</span><span class="match-report-score">${m.s1}−${m.s2}${pkBadge}</span><span>${m.pk==='team2'?' 🏆':''}${t2.f}${t2.n}</span>
+        <span style="margin-left:auto;font-size:10px;color:var(--muted)">${m.phase}</span>
+      </div>
+      <div class="match-pts-row">
+        ${pp.map(p=>`<div class="match-pt-pill${p.gain===maxG&&maxG>0?' winner':''}">
+          ${p.name} <b>+${p.gain}</b>
+        </div>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════════
+//  OVERTAKE SIMULATOR
+// ══════════════════════════════════════════════════════
+function renderOvertakeSimulator(D){
+  const el=document.getElementById('stats-overtake-list');
+  const sec=document.getElementById('stats-overtake-section');
+  const lb=calcLeaderboard(D);
+  if(lb.length<2||!D.matches.length){
+    sec.style.display='none'; return;
+  }
+  sec.style.display='';
+  const leader=lb[0];
+  el.innerHTML=lb.slice(1).map(p=>{
+    const gap=leader.total-p.total;
+    const keys=TEAMS.map(t=>({
+      team:t, edge:(p.weights[t.id]||0)-(leader.weights[t.id]||0)
+    })).filter(e=>e.edge>0).sort((a,b)=>b.edge-a.edge).slice(0,3);
+    const per3=(keys[0]?.edge||0)*3;
+    const winsNeeded=per3>0?Math.ceil(gap/per3):null;
+    return `<div class="overtake-card">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div style="font-size:14px;font-weight:700">${p.name}</div>
+        <div style="font-size:12px;color:var(--muted)">${leader.name}まで <span class="overtake-gap-num">-${gap.toLocaleString()}pt</span></div>
+      </div>
+      ${keys.length?`<div style="font-size:11px;color:var(--muted);margin:6px 0 4px">逆転の鍵チーム (${leader.name}より高い配点)</div>
+      <div class="overtake-key">
+        ${keys.map(k=>`<div class="key-chip">${k.team.f}${k.team.n} <span style="color:var(--accent);font-weight:700">+${k.edge}/pt</span></div>`).join('')}
+      </div>
+      ${winsNeeded?`<div style="font-size:11px;color:var(--muted);margin-top:6px">💡 ${keys[0].team.n}が勝ち続ければ約${winsNeeded}試合分で逆転可能</div>`:''}
+      `:'<div style="color:var(--muted);font-size:12px;margin-top:4px">逆転の鍵チームなし</div>'}
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════════
+//  WEIGHT TABLE
+// ══════════════════════════════════════════════════════
+function toggleWeightTable(){
+  const wrap=document.getElementById('stats-table-wrap');
+  const chev=document.getElementById('stats-table-chevron');
+  const open=wrap.style.display==='none';
+  wrap.style.display=open?'':'none';
+  chev.textContent=open?'▲ 閉じる':'▼ 開く';
+}
+
+function renderWeightTable(D, tPts, avgW){
+  const table=document.getElementById('stats-table');
+  const players=D.players;
+  if(!players.length){ table.innerHTML=''; return; }
+
+  // Sort teams by avg weight desc
+  const sorted=[...TEAMS].sort((a,b)=>avgW[b.id]-avgW[a.id]);
+
+  // Header
+  const hCols=players.map(p=>`<th>${p.name}</th>`).join('');
+  let html=`<thead><tr>
+    <th class="team-col">チーム</th>
+    ${hCols}
+    <th>平均</th><th>勝ち点</th>
+  </tr></thead><tbody>`;
+
+  sorted.forEach(t=>{
+    const tp=tPts[t.id]||0;
+    const avg=avgW[t.id];
+    const wCols=players.map(p=>{
+      const w=p.weights[t.id]||0;
+      if(!w) return '<td>—</td>';
+      const c=weightColor(w);
+      return `<td><div class="wt-chip" style="background:${c.bg};color:${c.color==='#000'?'#000':'#fff'}">${w}</div></td>`;
+    }).join('');
+    html+=`<tr>
+      <td class="team-col">${t.f} ${t.n}${tp?` <span style="color:var(--accent);font-size:10px">${tp}pt</span>`:''}</td>
+      ${wCols}
+      <td style="color:var(--muted);font-weight:700">${avg.toFixed(1)}</td>
+      <td style="color:${tp?'var(--accent)':'var(--muted)'};font-weight:700">${tp||'—'}</td>
+    </tr>`;
+  });
+  html+='</tbody>';
+  table.innerHTML=html;
+}
+
+// ══════════════════════════════════════════════════════
+//  PLAYER DETAIL MODAL
+// ══════════════════════════════════════════════════════
+function showPlayerDetail(playerName){
+  const D=spectatorData||G;
+  const p=D.players.find(x=>x.name===playerName);
+  if(!p) return;
+  const tPts=calcTeamPoints(D);
+  const sorted=[...TEAMS].sort((a,b)=>(p.weights[b.id]||0)-(p.weights[a.id]||0));
+  let total=0;
+  const rows=sorted.map(t=>{
+    const w=p.weights[t.id]||0;
+    const tp=tPts[t.id]||0;
+    const score=w*tp;
+    total+=score;
+    const col=w?weightColor(w):{bg:'rgba(255,255,255,.06)',color:'#666'};
+    return `<div class="player-detail-row">
+      <div class="player-detail-w" style="background:${col.bg};color:${col.color==='#000'?'#000':'#fff'}">${w||'—'}</div>
+      <div style="font-size:18px;flex-shrink:0">${t.f}</div>
+      <div style="flex:1;font-size:13px;${!w?'color:var(--muted)':''}">${t.n}</div>
+      <div class="player-detail-pts">${tp?`勝ち点${tp}`:''}</div>
+      <div class="player-detail-score">${score>0?'+'+score.toLocaleString():''}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('pdm-name').textContent=p.name;
+  document.getElementById('pdm-total').textContent=`合計 ${total.toLocaleString()}pt`;
+  document.getElementById('pdm-list').innerHTML=rows;
+  document.getElementById('player-detail-modal').classList.remove('hidden');
+}
+
+// ══════════════════════════════════════════════════════
+//  FIREBASE (REST API — no SDK needed)
+// ══════════════════════════════════════════════════════
+let fbDb=null;   // {databaseURL, roomId}
+let fbIsAdmin=false, fbConnected=false;
+let _pollTimer=null;
+
+function fbUrl(path=''){ return `${fbDb.databaseURL}/rooms/${fbDb.roomId}${path}.json`; }
+async function fbRead(){ const r=await fetch(fbUrl()+'?nc='+Date.now(),{cache:'no-store'}); if(!r.ok) throw new Error(r.status); return r.json(); }
+async function fbWrite(data){ const r=await fetch(fbUrl(),{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}); if(!r.ok) throw new Error(r.status); }
+async function fbWritePath(path,data){ await fetch(fbUrl(path),{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}); }
+
+function genRoomId(){ const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; return Array.from({length:6},()=>c[Math.floor(Math.random()*c.length)]).join(''); }
+
+function genJoinCode(databaseURL,roomId){ return btoa(JSON.stringify({u:databaseURL.replace(/\/$/,''),r:roomId})).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }
+function parseJoinCode(code){
+  const c=code.trim();
+  // シンプルなルームIDのみ（6文字英数字）→ デフォルトDBを使用
+  if(/^[A-Z0-9]{5,8}$/.test(c.toUpperCase())){
+    const saved=JSON.parse(localStorage.getItem('wc2026fb')||'{}');
+    const dbUrl=saved.databaseURL||'https://sakk-c8eb6-default-rtdb.firebaseio.com';
+    return {databaseURL:dbUrl,roomId:c.toUpperCase()};
+  }
+  // base64url形式（旧形式 or フルURL込み）
+  try{ const b64=c.replace(/-/g,'+').replace(/_/g,'/'); const d=JSON.parse(atob(b64)); if(d.u&&d.r) return {databaseURL:d.u,roomId:d.r}; }catch{}
+  return null;
+}
+
+function fbLoadSaved(){
+  try{
+    const d=JSON.parse(localStorage.getItem('wc2026fb'));
+    if(!d) return null;
+    if(d.config&&!d.databaseURL){ localStorage.removeItem('wc2026fb'); return null; } // clear old format
+    return d;
+  }catch{ return null; }
+}
+function fbSaveSaved(obj){ localStorage.setItem('wc2026fb',JSON.stringify(obj)); }
+
+function openFbModal(){
+  if(fbConnected&&fbIsAdmin){
+    showFbStep('done');
+    const saved=fbLoadSaved();
+    if(saved){
+      const joinCode=genJoinCode(saved.databaseURL,saved.roomId);
+      document.getElementById('fb-join-code-box').textContent=joinCode;
+      document.getElementById('fb-room-display').textContent=saved.roomId;
+    }
+  } else {
+    showFbStep('config');
+    const saved=fbLoadSaved();
+    if(saved?.databaseURL) document.getElementById('fb-dburl-input').value=saved.databaseURL;
+  }
+  document.getElementById('fb-modal').classList.remove('hidden');
+}
+function closeFbModal(){ document.getElementById('fb-modal').classList.add('hidden'); }
+function showFbStep(s){ ['config','done'].forEach(x=>document.getElementById(`fb-modal-step-${x}`).style.display=x===s?'':'none'); }
+
+async function fbCreateRoom(){
+  const databaseURL=document.getElementById('fb-dburl-input').value.trim().replace(/\/$/,'');
+  if(!databaseURL.includes('firebaseio.com')&&!databaseURL.includes('firebasedatabase.app')){ toast('❌ 正しいDatabase URLを入力してください'); return; }
+  const roomId=genRoomId();
+  fbDb={databaseURL,roomId};
+  try{
+    await fbWrite({players:G.players,matches:G.matches,createdAt:Date.now()});
+  } catch(e){ toast('❌ Firebase接続に失敗しました。URLを確認してください'); fbDb=null; return; }
+  fbIsAdmin=true; fbConnected=true;
+  fbSaveSaved({databaseURL,roomId,isAdmin:true});
+  startPolling();
+  startAutoESPN();
+  updateFbStatusBar();
+  const joinCode=genJoinCode(databaseURL,roomId);
+  document.getElementById('fb-join-code-box').textContent=joinCode;
+  document.getElementById('fb-room-display').textContent=roomId;
+  showFbStep('done');
+}
+
+let _lastJoinCode='';
+function copyJoinCode(){
+  _lastJoinCode=document.getElementById('fb-join-code-box').textContent;
+  navigator.clipboard.writeText(_lastJoinCode)
+    .then(()=>toast('✅ 参加コードをコピーしました！LINEに貼り付けてください'))
+    .catch(()=>prompt('このコードをLINEで送ってください:',_lastJoinCode));
+}
+function copyRoomId(){ copyJoinCode(); }
+
+async function joinWithCode(){
+  const raw=document.getElementById('join-code-input').value.trim();
+  if(!raw){ toast('参加コードを貼り付けてください'); return; }
+  const parsed=parseJoinCode(raw);
+  if(!parsed){ toast('❌ コードが正しくありません'); return; }
+  fbDb=parsed;
+  try{
+    const data=await fbRead();
+    if(data===null){ toast('❌ ルームが見つかりません'); fbDb=null; return; }
+    spectatorData={players:data.players||[],matches:data.matches||[]};
+  } catch(e){ toast('❌ 接続に失敗しました'); fbDb=null; return; }
+  fbIsAdmin=false; fbConnected=true;
+  fbSaveSaved({...parsed,isAdmin:false});
+  // Recover name from submission record if not already set
+  if(!myName){
+    const sub=localStorage.getItem(`wc2026submitted_${parsed.roomId}`)||'';
+    if(sub){ myName=sub; localStorage.setItem('wc2026myname',sub); }
+  }
+  startPolling();
+  updateFbStatusBar();
+  toast(`✅ ルーム ${parsed.roomId} に参加しました`);
+  goTo('v-stats');
+}
+
+function startPolling(){
+  if(_pollTimer) clearInterval(_pollTimer);
+  _doPoll(); // immediate first fetch
+  _pollTimer=setInterval(_doPoll, 12000);
+  startPresenceHeartbeat();
+}
+
+async function _doPoll(){
+  if(!fbDb) return;
+  try{
+    const data=await fbRead();
+    if(!data) return;
+    const fbMatches=(data.matches||[]).filter(Boolean);
+    if(fbIsAdmin){
+      _mergeFirebasePlayers(data.players||[]);
+      // Firebaseのmatches（正）でG.matchesを更新
+      if(fbMatches.length>=G.matches.length){
+        G.matches=fbMatches;
+        localStorage.setItem('wc2026game',JSON.stringify(G));
+        const lbEl=document.getElementById('admin-lb');
+        if(lbEl&&!lbEl.classList.contains('hidden')) renderLeaderboard();
+        const statsEl=document.getElementById('v-stats');
+        if(statsEl&&!statsEl.classList.contains('hidden')) loadStats();
+      }
+    } else {
+      spectatorData={players:data.players||[],matches:fbMatches};
+      const statsEl=document.getElementById('v-stats');
+      if(!statsEl.classList.contains('hidden')) loadStats();
+    }
+  }catch{}
+}
+
+function _mergeFirebasePlayers(fbPlayers){
+  const localNames=new Set(G.players.map(p=>p.name));
+  const newPlayers=fbPlayers.filter(p=>p.name&&!localNames.has(p.name));
+  if(!newPlayers.length) return;
+  G.players.push(...newPlayers);
+  localStorage.setItem('wc2026game',JSON.stringify(G));
+  const adminPlayersEl=document.getElementById('admin-players');
+  if(adminPlayersEl&&!adminPlayersEl.classList.contains('hidden')) renderPlayers();
+  toast(`✅ ${newPlayers.map(p=>p.name).join('、')} が参加しました！`);
+}
+
+function updateFbStatusBar(){
+  const bar=document.getElementById('fb-status-bar');
+  bar.classList.toggle('hidden',!fbConnected);
+  if(fbConnected){
+    document.getElementById('fb-dot').className='fb-dot fb-dot-on';
+    document.getElementById('fb-status-text').textContent=fbIsAdmin?`管理者 (自動更新中) ルーム`:'観戦中 ルーム';
+    document.getElementById('fb-room-label').textContent=fbDb?.roomId||'';
+  }
+}
+
+async function submitToRoom(){
+  if(!fbDb){ toast('参加コードで接続してください'); return; }
+  const btn=document.getElementById('submit-room-btn');
+  btn.disabled=true; btn.textContent='送信中…';
+  try{
+    const data=await fbRead()||{};
+    const players=[...(data.players||[])];
+    const idx=players.findIndex(p=>p.name===myName);
+    if(idx>=0){
+      // 既に送信済み
+      btn.textContent='✅ 送信済み（変更不可）';
+      toast(`⚠️ ${myName} の予想は既に送信済みです`);
+      return;
+    }
+    const entry={name:myName,weights:myWeights};
+    players.push(entry);
+    await fbWritePath('/players',players);
+    btn.textContent='✅ 送信済み（変更不可）';
+    toast(`✅ ${myName}の予想を送信しました！`);
+    // 送信済みをローカルに記録
+    localStorage.setItem(`wc2026submitted_${fbDb.roomId}`,myName);
+    if(!fbIsAdmin){ spectatorData={...(spectatorData||{}),players}; }
+  } catch(e){
+    btn.disabled=false; btn.textContent='🚀 ルームに送信する';
+    toast('❌ 送信に失敗しました');
+  }
+}
+
+// Wrap saveState to push to Firebase when admin
+function saveState(){
+  localStorage.setItem('wc2026game',JSON.stringify(G));
+  if(fbConnected&&fbDb){
+    fbWrite({players:G.players,matches:G.matches,updatedAt:Date.now()})
+      .catch(e=>console.warn('Firebase write failed',e));
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════════
+// ── News Ticker ──────────────────────────────────────────
+let _tickerTimer=null;
+async function loadNewsTicker(){
+  try{
+    let headlines=[];
+    // まずNHKスポーツRSS（日本語）を試す
+    try{
+      const r=await fetch('https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww3.nhk.or.jp%2Frss%2Fnews%2Fcat7.xml');
+      const data=await r.json();
+      if(data.status==='ok'){
+        let hs=(data.items||[]).map(it=>it.title||'').filter(Boolean);
+        const wc=hs.filter(h=>h.includes('W杯')||h.includes('ワールドカップ')||h.includes('サッカー'));
+        headlines=wc.length>=4?wc:hs;
+      }
+    }catch{}
+    // NHKが取れなければESPN(英語)にフォールバック
+    if(!headlines.length){
+      const r=await fetch('https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/news?limit=20');
+      const data=await r.json();
+      headlines=(data.articles||[]).map(a=>a.headline).filter(Boolean);
+    }
+    if(!headlines.length) return;
+    const el=document.getElementById('ticker-inner');
+    if(!el) return;
+    const items=headlines.map(h=>`<span class="ticker-item">${h}</span><span class="ticker-sep"></span>`).join('');
+    el.innerHTML=items+items;
+    el.classList.remove('running');
+    void el.offsetWidth;
+    el.classList.add('running');
+  }catch{}
+}
+function startNewsTicker(){
+  loadNewsTicker();
+  if(_tickerTimer) clearInterval(_tickerTimer);
+  _tickerTimer=setInterval(loadNewsTicker,5*60*1000);
+}
+
+function init(){
+  // LINEブラウザ検知 → 外部ブラウザで開くよう促す
+  if(/Line\//i.test(navigator.userAgent)){
+    const banner=document.createElement('div');
+    banner.style.cssText='position:fixed;top:0;left:0;right:0;z-index:9999;background:#06c755;color:#fff;font-size:13px;padding:10px 14px;text-align:center;font-weight:700;line-height:1.5';
+    banner.innerHTML='⚠️ LINEブラウザでは正しく表示されません<br><span style="font-size:12px;font-weight:400">右上の「…」→「ブラウザで開く」をタップしてください</span>';
+    document.body.appendChild(banner);
+  }
+  goTo('v-landing',false);
+  viewHistory=['v-landing'];
+  // Restore myName across sessions
+  if(!myName) myName=localStorage.getItem('wc2026myname')||'';
+  // URL ?join=<code> で自動参加
+  const urlJoin=new URLSearchParams(location.search).get('join');
+  if(urlJoin){
+    const el=document.getElementById('join-code-input');
+    if(el) el.value=urlJoin;
+  }
+  // Auto-reconnect if saved session exists
+  const saved=fbLoadSaved();
+  if(saved&&saved.databaseURL&&saved.roomId){
+    fbDb={databaseURL:saved.databaseURL,roomId:saved.roomId};
+    fbIsAdmin=saved.isAdmin||false;
+    fbConnected=true;
+    // Fallback: recover name from submission record (older app versions didn't save wc2026myname)
+    if(!myName){
+      const sub=localStorage.getItem(`wc2026submitted_${saved.roomId}`)||'';
+      if(sub){ myName=sub; localStorage.setItem('wc2026myname',sub); }
+    }
+    startPolling();
+    startPresenceHeartbeat();
+    if(fbIsAdmin) startAutoESPN();
+    updateFbStatusBar();
+  } else if(urlJoin){
+    // 保存セッションなし + URLパラメータあり → 自動参加
+    setTimeout(joinWithCode, 300);
+  }
+  startNewsTicker();
+}
+init();
+
+// Dev helper: testGoal() in console to preview celebration
+</script>
+<!-- Match End Card -->
+<div id="match-end-card" onclick="dismissMatchEnd()">
+  <div id="me-progress"></div>
+  <div id="match-end-content"></div>
+</div>
+
+<!-- Chat FAB -->
+<button id="chat-fab" onclick="openChat()" aria-label="チャット">
+  💬
+  <span id="chat-fab-badge"></span>
+</button>
+
+<!-- Chat Modal -->
+<div id="chat-modal">
+  <div id="chat-backdrop" onclick="closeChat()"></div>
+  <div id="chat-panel">
+    <div id="chat-header">
+      <div>
+        <div id="chat-header-info">💬 チャット</div>
+        <div id="chat-header-sub">ルームメンバーと話そう</div>
+      </div>
+      <button id="chat-close-btn" onclick="closeChat()">✕</button>
+    </div>
+    <div id="chat-messages"><div class="chat-empty">メッセージはまだありません</div></div>
+    <div id="chat-name-picker" style="display:none;padding:12px 14px;border-top:1px solid rgba(255,255,255,.07);background:rgba(0,0,0,.2)">
+      <div style="font-size:12px;color:var(--muted);margin-bottom:8px">あなたは誰？タップして選んでください</div>
+      <div id="chat-name-chips" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+    </div>
+    <div id="chat-input-row">
+      <input id="chat-input" type="text" placeholder="メッセージを入力…" maxlength="200" onkeydown="if(event.key==='Enter')sendChatMessage()">
+      <button id="chat-send-btn" onclick="sendChatMessage()">送信</button>
+    </div>
+  </div>
+</div>
+
+<!-- Goal Celebration Overlay -->
+<div id="goal-overlay" onclick="dismissGoal()">
+  <div id="goal-bg"></div>
+  <canvas id="goal-canvas"></canvas>
+  <div id="goal-card">
+    <div id="goal-emoji-wrap"><span id="goal-emoji">⚽</span></div>
+    <div id="goal-text">GOAL!</div>
+    <div id="goal-team"></div>
+    <div id="goal-divider"></div>
+    <div id="goal-benefit"></div>
+    <div id="goal-dismiss">タップして閉じる</div>
+  </div>
+</div>
+</body>
+</html>
