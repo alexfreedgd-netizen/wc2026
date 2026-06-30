@@ -2734,9 +2734,9 @@ async function fbWritePath(path,data){ await fetch(fbUrl(path),{method:'PUT',hea
 
 function genRoomId(){ const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; return Array.from({length:6},()=>c[Math.floor(Math.random()*c.length)]).join(''); }
 
-function genJoinCode(databaseURL,roomId){ return btoa(JSON.stringify({u:databaseURL.replace(/\/$/,''),r:roomId})); }
+function genJoinCode(databaseURL,roomId){ return btoa(JSON.stringify({u:databaseURL.replace(/\/$/,''),r:roomId})).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }
 function parseJoinCode(code){
-  try{ const d=JSON.parse(atob(code.trim())); if(d.u&&d.r) return {databaseURL:d.u,roomId:d.r}; }catch{}
+  try{ const b64=code.trim().replace(/-/g,'+').replace(/_/g,'/'); const d=JSON.parse(atob(b64)); if(d.u&&d.r) return {databaseURL:d.u,roomId:d.r}; }catch{}
   return null;
 }
 
