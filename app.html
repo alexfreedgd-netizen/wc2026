@@ -1337,26 +1337,14 @@ function renderMatches(){
   const sorted=[...G.matches].reverse();
   list.innerHTML=sorted.map(m=>{
     const t1=TEAMS.find(t=>t.id===m.t1); const t2=TEAMS.find(t=>t.id===m.t2);
-    const isDraw=m.s1===m.s2;
-    const pkBtn=isDraw&&!m.pk?`<button onclick="setPK(${m.id},'team1')" style="font-size:10px;padding:2px 5px;border-radius:4px;border:1px solid var(--gold);background:transparent;color:var(--gold);cursor:pointer;margin-right:2px">${t1.n}PK勝</button><button onclick="setPK(${m.id},'team2')" style="font-size:10px;padding:2px 5px;border-radius:4px;border:1px solid var(--gold);background:transparent;color:var(--gold);cursor:pointer">${t2.n}PK勝</button>`:'';
-    return `<div class="match-item" style="flex-wrap:wrap;gap:4px">
+    return `<div class="match-item">
       <span style="font-size:10px;color:var(--muted);min-width:60px">${m.phase}</span>
       <span>${t1.f}${t1.n}${m.pk==='team1'?' 🏆':''}</span>
       <span class="match-score">${m.s1}−${m.s2}${m.pk?'<span style="font-size:9px;color:var(--gold);display:block;text-align:center">PK</span>':''}</span>
       <span>${t2.f}${t2.n}${m.pk==='team2'?' 🏆':''}</span>
       <button class="match-del" onclick="deleteMatch(${m.id})">✕</button>
-      ${pkBtn?`<div style="width:100%;padding-left:64px">${pkBtn}</div>`:''}
     </div>`;
   }).join('');
-}
-function setPK(id,winner){
-  const idx=G.matches.findIndex(m=>m.id===id);
-  if(idx<0) return;
-  G.matches[idx]={...G.matches[idx],pk:winner};
-  saveState(); renderMatches();
-  const lbEl=document.getElementById('admin-lb');
-  if(lbEl&&!lbEl.classList.contains('hidden')) renderLeaderboard();
-  toast('✅ PK設定しました');
 }
 
 // ══════════════════════════════════════════════════════
