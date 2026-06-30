@@ -571,7 +571,6 @@ select{
 
 <!-- ════ STATS ════ -->
 <div id="v-stats" class="view hidden" style="padding-bottom:24px">
-  <div id="stats-debug" style="font-size:10px;color:var(--muted);padding:4px 16px;text-align:center"></div>
 
   <!-- Today's / Tomorrow's matches -->
   <div class="stats-section" id="stats-today-section" style="display:none">
@@ -1751,13 +1750,25 @@ let spectatorData=null;
 //  STATS VIEW
 // ══════════════════════════════════════════════════════
 async function loadStats(){
-  const D=spectatorData||G;
+  // 管理者もFirebaseから最新プレイヤーデータを取得して使う
+  let D;
+  if(spectatorData){
+    D=spectatorData;
+  } else if(fbConnected&&fbDb){
+    try{
+      const fbData=await fbRead();
+      if(fbData){
+        const fbMatches=(fbData.matches||[]).filter(Boolean);
+        const fbPlayers=fbData.players||[];
+        if(fbMatches.length) G.matches=fbMatches;
+        D={players:fbPlayers.length?fbPlayers:G.players, matches:G.matches};
+        localStorage.setItem('wc2026game',JSON.stringify(G));
+      } else { D=G; }
+    } catch(e){ D=G; }
+  } else {
+    D=G;
+  }
   const isSpectator=!!spectatorData;
-  // デバッグ: 何試合ロードされているか・PKが正しいか確認
-  const pkMatch=D.matches.find(m=>(m.t1===16&&m.t2===13)||(m.t1===13&&m.t2===16));
-  const dbgPts=calcTeamPoints(D);
-  const dbgEl=document.getElementById('stats-debug');
-  if(dbgEl) dbgEl.textContent=`${D.matches.length}試合 / 独PY pk=${pkMatch?.pk||'なし'} / src=${isSpectator?'FB':'Local'} / PY=${dbgPts[13]}pt DE=${dbgPts[16]}pt`;
   const empty=document.getElementById('stats-empty');
   const sections=['stats-today-section','stats-lb-section','stats-pop-section','stats-dark-section','stats-match-section','stats-overtake-section','stats-picks-section'];
 
@@ -2603,8 +2614,6 @@ function renderMatchBreakdown(D){
       name:p.name, gain:(p.weights[m.t1]||0)*p1+(p.weights[m.t2]||0)*p2
     })).sort((a,b)=>b.gain-a.gain);
     const maxG=pp[0]?.gain||0;
-    const isPyDe=(m.t1===16&&m.t2===13)||(m.t1===13&&m.t2===16);
-    if(isPyDe){const el2=document.getElementById('stats-debug');if(el2)el2.textContent+=` | BK:t1=${m.t1}t2=${m.t2}pk=${m.pk}p1=${p1}p2=${p2}w13=${D.players[0]?.weights[13]}w16=${D.players[0]?.weights[16]}`;}
     const pkBadge=m.pk?`<span style="font-size:9px;color:var(--gold);display:block;text-align:center;line-height:1">PK</span>`:'';
     return `<div class="match-report-card">
       <div style="display:flex;align-items:center;gap:3px;font-size:13px;font-weight:700;flex-wrap:wrap">
