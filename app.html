@@ -571,6 +571,7 @@ select{
 
 <!-- ════ STATS ════ -->
 <div id="v-stats" class="view hidden" style="padding-bottom:24px">
+  <div id="stats-debug" style="font-size:10px;color:var(--muted);padding:4px 16px;text-align:center"></div>
 
   <!-- Today's / Tomorrow's matches -->
   <div class="stats-section" id="stats-today-section" style="display:none">
@@ -1752,6 +1753,10 @@ let spectatorData=null;
 async function loadStats(){
   const D=spectatorData||G;
   const isSpectator=!!spectatorData;
+  // デバッグ: 何試合ロードされているか・PKが正しいか確認
+  const pkMatch=D.matches.find(m=>(m.t1===16&&m.t2===13)||(m.t1===13&&m.t2===16));
+  const dbgEl=document.getElementById('stats-debug');
+  if(dbgEl) dbgEl.textContent=`データ: ${D.matches.length}試合 / 独PY pk=${pkMatch?.pk||'なし'} / src=${isSpectator?'Firebase':'ローカル'}`;
   const empty=document.getElementById('stats-empty');
   const sections=['stats-today-section','stats-lb-section','stats-pop-section','stats-dark-section','stats-match-section','stats-overtake-section','stats-picks-section'];
 
@@ -2853,6 +2858,8 @@ async function _doPoll(){
         localStorage.setItem('wc2026game',JSON.stringify(G));
         const lbEl=document.getElementById('admin-lb');
         if(lbEl&&!lbEl.classList.contains('hidden')) renderLeaderboard();
+        const statsEl=document.getElementById('v-stats');
+        if(statsEl&&!statsEl.classList.contains('hidden')) loadStats();
       }
     } else {
       spectatorData={players:data.players||[],matches:fbMatches};
