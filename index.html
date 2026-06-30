@@ -1874,8 +1874,11 @@ function renderTodayMatches(events, D){
     }
 
     // Score display
+    const storedM=isDone?G.matches.find(m=>(m.t1===id0&&m.t2===id1)||(m.t1===id1&&m.t2===id0)):null;
+    const pkLabel=storedM?.pk?`<span style="font-size:9px;color:var(--gold);display:block;text-align:center;line-height:1">PK</span>`:'';
+    const pkWinnerName=storedM?.pk==='team1'?(storedM.t1===id0?n0:n1):storedM?.pk==='team2'?(storedM.t2===id1?n1:n0):'';
     const scoreHtml=(isLive||isDone)
-      ?`<span class="match-report-score" style="${isLive?'color:#ff4444;font-size:18px':''}">${s0}−${s1}</span>`
+      ?`<span class="match-report-score" style="${isLive?'color:#ff4444;font-size:18px':''}">${s0}−${s1}${pkLabel}</span>`
       :`<span style="color:var(--muted);font-size:13px;padding:0 8px">vs</span>`;
 
     // Point impact panel
@@ -1936,9 +1939,9 @@ function renderTodayMatches(events, D){
         <span style="font-size:10px;color:var(--muted)">${phaseFromNote(ev.name||'')}</span>
       </div>
       <div style="display:flex;align-items:center;gap:4px;font-size:14px;font-weight:700;flex-wrap:wrap">
-        <span>${t0?t0.f:''} ${t0?t0.n:n0}</span>
+        <span>${t0?t0.f:''} ${t0?t0.n:n0}${pkWinnerName===n0?' 🏆':''}</span>
         ${scoreHtml}
-        <span>${t1?t1.f:''} ${t1?t1.n:n1}</span>
+        <span>${pkWinnerName===n1?' 🏆':''}${t1?t1.f:''} ${t1?t1.n:n1}</span>
       </div>
       ${impactHtml}
     </div>`;
@@ -2501,9 +2504,10 @@ function renderMatchBreakdown(D){
       name:p.name, gain:(p.weights[m.t1]||0)*p1+(p.weights[m.t2]||0)*p2
     })).sort((a,b)=>b.gain-a.gain);
     const maxG=pp[0]?.gain||0;
+    const pkBadge=m.pk?`<span style="font-size:9px;color:var(--gold);display:block;text-align:center;line-height:1">PK</span>`:'';
     return `<div class="match-report-card">
       <div style="display:flex;align-items:center;gap:3px;font-size:13px;font-weight:700;flex-wrap:wrap">
-        <span>${t1.f}${t1.n}</span><span class="match-report-score">${m.s1}−${m.s2}</span><span>${t2.f}${t2.n}</span>
+        <span>${t1.f}${t1.n}${m.pk==='team1'?' 🏆':''}</span><span class="match-report-score">${m.s1}−${m.s2}${pkBadge}</span><span>${m.pk==='team2'?' 🏆':''}${t2.f}${t2.n}</span>
         <span style="margin-left:auto;font-size:10px;color:var(--muted)">${m.phase}</span>
       </div>
       <div class="match-pts-row">
