@@ -1362,66 +1362,161 @@ function calcTeamPoints(D){
   });
   return pts;
 }
-// ── Win rate calculation (group standings + knockout potential) ──
+// ── Win rate: Monte Carlo simulation ──
 function calcWinRates(D, espnEvents){
-  const earnedPts=calcTeamPoints(D);
+  const currentPts=calcTeamPoints(D);
 
-  // Build per-team group standings from ESPN completed matches
+  // Build group standings from stored matches (more reliable than ESPN for completed data)
   const grpMap={};
-  TEAMS.forEach(t=>{ grpMap[t.id]={g:t.g,pts:0,gd:0,gf:0,played:0}; });
+  TEAMS.forEach(t=>{ grpMap[t.id]={pts:0,gd:0,gf:0,played:0}; });
+  D.matches.forEach(m=>{
+    if(m.s1==null||m.s2==null) return;
+    let p1=0,p2=0;
+    if(m.pk==='team1'){p1=3;}else if(m.pk==='team2'){p2=3;}
+    else{p1=m.s1>m.s2?3:m.s1===m.s2?1:0; p2=m.s2>m.s1?3:m.s1===m.s2?1:0;}
+    grpMap[m.t1].pts+=p1; grpMap[m.t1].gd+=(m.s1-m.s2); grpMap[m.t1].gf+=m.s1; grpMap[m.t1].played++;
+    grpMap[m.t2].pts+=p2; grpMap[m.t2].gd+=(m.s2-m.s1); grpMap[m.t2].gf+=m.s2; grpMap[m.t2].played++;
+  });
 
-  // Remaining group match potential per team
-  const remainGrpPts={};
-  TEAMS.forEach(t=>{ remainGrpPts[t.id]=0; });
-
+  // Check for remaining group matches (from ESPN unplayed events)
+  const remainGrpMatches={}; // id -> [{opp}]
+  TEAMS.forEach(t=>{ remainGrpMatches[t.id]=[]; });
   if(espnEvents){
     espnEvents.forEach(ev=>{
-      if(/round of|quarter|semi|final/i.test(ev.name||'')) return; // knockout — skip
+      if(/round of|quarter|semi|final/i.test(ev.name||'')) return;
+      if(evIsDone(ev)||evIsLive(ev)) return;
       const comps=ev.competitions?.[0]?.competitors||[];
       if(comps.length<2) return;
       const id0=ESPN_MAP[comps[0].team?.displayName||''];
       const id1=ESPN_MAP[comps[1].team?.displayName||''];
       if(id0==null||id1==null) return;
-      if(evIsDone(ev)||evIsLive(ev)){
-        const s0=parseInt(comps[0].score||'0'), s1=parseInt(comps[1].score||'0');
-        [[id0,s0,s1],[id1,s1,s0]].forEach(([id,ms,os])=>{
-          const g=grpMap[id]; g.played++; g.gf+=ms; g.gd+=ms-os;
-          if(ms>os) g.pts+=3; else if(ms===os) g.pts+=1;
-        });
-      } else {
-        remainGrpPts[id0]+=3; remainGrpPts[id1]+=3;
-      }
+      remainGrpMatches[id0].push(id1);
+      remainGrpMatches[id1].push(id0);
     });
   }
 
-  // Determine eliminated teams (4th place in a completed group)
+  // Team strength for simulation: group pts per game (smoothed)
+  const strength={};
+  TEAMS.forEach(t=>{
+    const g=grpMap[t.id];
+    strength[t.id]=(g.pts+1)/(Math.max(g.played,1)*3+1); // 0-1 scale, smoothed
+  });
+
+  // Determine group qualifiers (top 2 per group) and 3rd-place teams
+  const qualTop2=new Set();
+  const third=[];
   const eliminated=new Set();
-  [...new Set(TEAMS.map(t=>t.g))].forEach(g=>{
-    const grpTeams=TEAMS.filter(t=>t.g===g);
-    if(!grpTeams.every(t=>grpMap[t.id].played>=3)) return; // group not finished
-    const sorted=[...grpTeams].sort((a,b)=>{
+  const groups=[...new Set(TEAMS.map(t=>t.g))];
+  groups.forEach(g=>{
+    const gt=TEAMS.filter(t=>t.g===g);
+    const allDone=gt.every(t=>grpMap[t.id].played>=3);
+    if(!allDone) return;
+    const sorted=[...gt].sort((a,b)=>{
       const sa=grpMap[a.id],sb=grpMap[b.id];
       return sb.pts-sa.pts||sb.gd-sa.gd||sb.gf-sa.gf;
     });
-    eliminated.add(sorted[3].id); // 4th place out
+    qualTop2.add(sorted[0].id); qualTop2.add(sorted[1].id);
+    third.push(sorted[2]);
+    eliminated.add(sorted[3].id);
   });
+  // Best 8 third-place teams also advance (2026 format: 12 groups, top 2 + 8 best 3rd = 32)
+  const qual3rd=new Set([...third].sort((a,b)=>{
+    const sa=grpMap[a.id],sb=grpMap[b.id];
+    return sb.pts-sa.pts||sb.gd-sa.gd||sb.gf-sa.gf;
+  }).slice(0,8).map(t=>t.id));
+  third.filter(t=>!qual3rd.has(t.id)).forEach(t=>eliminated.add(t.id));
 
-  // Knockout potential: R32+R16+QF+SF+Final = 5 matches × 3pt = 15pt max
-  const KO_MAX=15;
+  // Track teams already in KO (from KO phase in stored matches)
+  const inKO=new Set();
+  const koElim=new Set();
+  D.matches.forEach(m=>{
+    if(!m.phase||/グループ/i.test(m.phase)) return;
+    if(m.s1==null) return;
+    inKO.add(m.t1); inKO.add(m.t2);
+    // loser is eliminated from KO
+    if(m.pk==='team1') koElim.add(m.t2);
+    else if(m.pk==='team2') koElim.add(m.t1);
+    else if(m.s1>m.s2) koElim.add(m.t2);
+    else if(m.s2>m.s1) koElim.add(m.t1);
+  });
+  const koAlive=new Set([...inKO].filter(id=>!koElim.has(id)));
+
+  // Seed for simulation: teams still alive in KO + newly qualified (not yet played KO)
+  const qualifiedForKO=new Set([...qualTop2,...qual3rd,...koAlive]);
+  eliminated.forEach(id=>qualifiedForKO.delete(id));
+  koElim.forEach(id=>qualifiedForKO.delete(id));
+
+  // Monte Carlo: 500 simulations of remaining KO bracket
+  const N_SIM=500;
+  const winCount={};
+  D.players.forEach(p=>{ winCount[p.name]=0; });
+
+  for(let sim=0;sim<N_SIM;sim++){
+    // Simulate remaining group stage matches (if any)
+    const simPts={...currentPts};
+    const simGrp={};
+    TEAMS.forEach(t=>{ simGrp[t.id]={...grpMap[t.id]}; });
+
+    // Simulate unplayed group matches
+    const simmedPairs=new Set();
+    TEAMS.forEach(t=>{
+      remainGrpMatches[t.id].forEach(opp=>{
+        const key=[Math.min(t.id,opp),Math.max(t.id,opp)].join('-');
+        if(simmedPairs.has(key)) return;
+        simmedPairs.add(key);
+        const sA=strength[t.id],sB=strength[opp];
+        const r=Math.random()*(sA+sB);
+        if(r<sA*0.7){simPts[t.id]=(simPts[t.id]||0)+3; simGrp[t.id].pts+=3;}
+        else if(r<sA*0.7+Math.min(sA,sB)*0.6){simPts[t.id]=(simPts[t.id]||0)+1;simPts[opp]=(simPts[opp]||0)+1;simGrp[t.id].pts+=1;simGrp[opp].pts+=1;}
+        else{simPts[opp]=(simPts[opp]||0)+3;simGrp[opp].pts+=3;}
+      });
+    });
+
+    // Determine KO teams for this simulation (re-rank groups if any group not finished)
+    let koTeams=[...qualifiedForKO];
+    // Add any newly qualified from simulated group completion
+    groups.forEach(g=>{
+      const gt=TEAMS.filter(t=>t.g===g);
+      if(gt.every(t=>grpMap[t.id].played>=3)) return; // already determined above
+      const sorted=[...gt].sort((a,b)=>simGrp[b.id].pts-simGrp[a.id].pts||simGrp[b.id].gd-simGrp[a.id].gd);
+      koTeams.push(sorted[0].id,sorted[1].id);
+    });
+    koTeams=[...new Set(koTeams)];
+
+    // Shuffle for random bracket seeding
+    for(let i=koTeams.length-1;i>0;i--){
+      const j=Math.floor(Math.random()*(i+1));
+      [koTeams[i],koTeams[j]]=[koTeams[j],koTeams[i]];
+    }
+
+    // Simulate KO rounds until 1 team left
+    while(koTeams.length>1){
+      const next=[];
+      for(let i=0;i<koTeams.length-1;i+=2){
+        const a=koTeams[i],b=koTeams[i+1];
+        const sA=strength[a]||0.5,sB=strength[b]||0.5;
+        const winner=Math.random()<sA/(sA+sB)?a:b;
+        simPts[winner]=(simPts[winner]||0)+3;
+        next.push(winner);
+      }
+      if(koTeams.length%2===1) next.push(koTeams[koTeams.length-1]);
+      koTeams=next;
+    }
+
+    // Score each player for this sim
+    const scores=D.players.map(p=>({
+      name:p.name,
+      total:TEAMS.reduce((s,t)=>s+(p.weights[t.id]||0)*(simPts[t.id]||0),0)
+    }));
+    const maxScore=Math.max(...scores.map(p=>p.total));
+    const winners=scores.filter(p=>p.total===maxScore);
+    winners.forEach(p=>{ winCount[p.name]+=1/winners.length; });
+  }
 
   return D.players.map(p=>{
-    let earned=0,grpRemain=0,koRemain=0;
-    TEAMS.forEach(t=>{
-      const w=p.weights[t.id]||0; if(!w) return;
-      earned   +=w*(earnedPts[t.id]||0);
-      grpRemain+=w*(remainGrpPts[t.id]||0);
-      if(!eliminated.has(t.id)) koRemain+=w*KO_MAX;
-    });
-    const remaining=grpRemain+koRemain;
-    const denom=earned+remaining;
-    const rate=denom>0?Math.round(earned/denom*100):0;
-    return {...p,earned,grpRemain,koRemain,remaining,rate};
-  }).sort((a,b)=>b.earned-a.earned);
+    const earned=TEAMS.reduce((s,t)=>s+(p.weights[t.id]||0)*(currentPts[t.id]||0),0);
+    return {...p,earned,rate:Math.round(winCount[p.name]/N_SIM*100)};
+  }).sort((a,b)=>b.rate-a.rate||b.earned-a.earned);
 }
 
 function calcLeaderboard(D){
@@ -1690,28 +1785,23 @@ async function loadStats(){
   const rankE=['🥇','🥈','🥉'];
   let wrRank=1;
   wrData.forEach((p,i)=>{
-    if(i>0&&p.earned<wrData[i-1].earned) wrRank=i+1;
+    if(i>0&&p.rate<wrData[i-1].rate) wrRank=i+1;
     p.rank=wrRank;
   });
+  const maxEarned=Math.max(...wrData.map(p=>p.earned),1);
   document.getElementById('stats-pop-list').innerHTML=wrData.map(p=>{
-    const tot=p.earned+p.remaining||1;
-    const ePct=(p.earned/tot*100).toFixed(1);
-    const gPct=(p.grpRemain/tot*100).toFixed(1);
-    const kPct=(p.koRemain/tot*100).toFixed(1);
+    const barPct=(p.earned/maxEarned*100).toFixed(1);
     return `<div class="wr-row">
       <div class="wr-header">
         <div class="wr-name">${rankE[p.rank-1]||p.rank} ${p.name}</div>
         <div class="wr-rate">${p.rate}%</div>
       </div>
       <div class="wr-bar-wrap">
-        <div class="wr-bar-earned" style="width:${ePct}%"></div>
-        <div class="wr-bar-group" style="width:${gPct}%"></div>
-        <div class="wr-bar-ko" style="width:${kPct}%"></div>
+        <div class="wr-bar-earned" style="width:${barPct}%"></div>
       </div>
       <div class="wr-footer">
-        <span class="wr-legend"><span class="wr-dot" style="background:#f59e0b"></span>確定 ${p.earned.toLocaleString()}pt</span>
-        <span class="wr-legend"><span class="wr-dot" style="background:rgba(255,165,0,.6)"></span>GL残 +${p.grpRemain.toLocaleString()}</span>
-        <span class="wr-legend"><span class="wr-dot" style="background:rgba(255,215,0,.3)"></span>KO +${p.koRemain.toLocaleString()}</span>
+        <span class="wr-legend"><span class="wr-dot" style="background:#f59e0b"></span>現在 ${p.earned.toLocaleString()}pt</span>
+        <span style="font-size:10px;color:var(--muted)">500回シミュレーション結果</span>
       </div>
     </div>`;
   }).join('');
