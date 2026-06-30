@@ -2731,7 +2731,7 @@ let fbIsAdmin=false, fbConnected=false;
 let _pollTimer=null;
 
 function fbUrl(path=''){ return `${fbDb.databaseURL}/rooms/${fbDb.roomId}${path}.json`; }
-async function fbRead(){ const r=await fetch(fbUrl()); if(!r.ok) throw new Error(r.status); return r.json(); }
+async function fbRead(){ const r=await fetch(fbUrl()+'?nc='+Date.now(),{cache:'no-store'}); if(!r.ok) throw new Error(r.status); return r.json(); }
 async function fbWrite(data){ const r=await fetch(fbUrl(),{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}); if(!r.ok) throw new Error(r.status); }
 async function fbWritePath(path,data){ await fetch(fbUrl(path),{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}); }
 
